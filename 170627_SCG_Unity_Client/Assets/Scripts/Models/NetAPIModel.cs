@@ -31,8 +31,8 @@ namespace NetAPIModelNamespace
             string mRESP_JSON = string.Empty;
 
             //Call RESTFul
-            string url = @"http://localhost:3000/";
-            url = "http://10.10.10.171:3000/HelloWorld";
+            string url = @"http://localhost:3000/HelloWorld";
+            //url = "http://10.10.10.171:3000/HelloWorld";
             string header = "HelloWorld";
             string json = JsonUtility.ToJson(mPackage_HelloWorld);
 
