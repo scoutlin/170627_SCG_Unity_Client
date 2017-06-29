@@ -11,7 +11,7 @@ namespace NetModelNamespace
     {
         public enum NetType
         {
-            None,
+            Null,
             Socket,
             WebSocket,
             SocketIO,
@@ -20,19 +20,22 @@ namespace NetModelNamespace
             Http2
         }
 
-        private static NetType mNetType = NetType.None;
+        private static NetType mNetType = NetType.Null;
         private static NetModel mNetModel = null;
 
-        public static NetModel GetInstance(NetType netType)
+        public static void SetNetType(NetType netType)
         {
-            if (netType == NetType.None)
+            mNetType = netType;
+        }
+
+        public static NetModel GetInstance()
+        {
+            if (mNetType == NetType.Null)
             {
                 return null;
             }
             else
             {
-                mNetType = netType;
-
                 if (mNetModel == null)
                 {
                     mNetModel = new NetModel();
@@ -42,9 +45,9 @@ namespace NetModelNamespace
             }
         }
 
-        public bool RESTFulGET(string url, string JSON)
+        public string RESTFulGET(string url, string header, string json)
         {
-            bool rt = false;
+            string mRESP_JSON = string.Empty;
 
             using (WebClient mWebClient = new WebClient())
             {
@@ -56,20 +59,46 @@ namespace NetModelNamespace
                 //Form
                 //Start
                 NameValueCollection mREQ_param = new NameValueCollection();
-                mREQ_param.Add("JSON", JSON);
+                mREQ_param.Add("HEADER", header);
+                mREQ_param.Add("JSON", json);
                 byte[] byte_RESP_param = mWebClient.UploadValues(url, mREQ_param);
-                string mRESP_JSON = Encoding.UTF8.GetString(byte_RESP_param);
+                mRESP_JSON = Encoding.UTF8.GetString(byte_RESP_param);
                 //End
             }
 
-            return rt;
+            return mRESP_JSON;
         }
 
-        public bool RESTFulPOST(string url, string JSON)
+        public string RESTFulPOST(string url, string header, string json)
         {
-            bool rt = false;
+            string mRESP_JSON = string.Empty;
 
-            return rt;
+
+            Debug.Log("Into RESTFul POST");
+            Debug.Log("url: " + url);
+            Debug.Log("header: " + header);
+            Debug.Log("json: " + json);
+
+
+            using (WebClient mWebClient = new WebClient())
+            {
+                ////No Form
+                ////Start
+                //string mRESP_JSON = mWebClient.UploadString(url, JSON);
+                ////End
+
+                //Form
+                //Start
+                NameValueCollection mREQ_param = new NameValueCollection();
+                mREQ_param.Add("HEADER", header);
+                mREQ_param.Add("JSON", json);
+                byte[] byte_RESP_param = mWebClient.UploadValues(url, mREQ_param);
+                
+                mRESP_JSON = Encoding.UTF8.GetString(byte_RESP_param);
+                //End
+            }
+
+            return mRESP_JSON;
         }
     }
 }
