@@ -1,8 +1,4 @@
-﻿using NetAPIModelNamespace;
-using NetModelNamespace;
-using PacketStructNamespace;
-using System.Collections;
-using System.Collections.Generic;
+﻿using SCG_Unity_Client_API;
 using UnityEngine;
 
 
