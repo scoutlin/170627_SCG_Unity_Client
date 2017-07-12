@@ -9,8 +9,6 @@ public class RegistTable
         public RESTFulTestView mRESTFulTestView = null;
     }
 
-
-
     public static RegistTable mRegistTable = null;
 
     public View mView;

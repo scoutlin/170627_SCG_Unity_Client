@@ -1,4 +1,5 @@
 ﻿using SCG_Unity_Client_API;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -17,31 +18,30 @@ public class RESTFulTestView : MonoBehaviour
         RegistTable.Instance.mView.mRESTFulTestView = this;
         Debug.Log("Yeah");
 	}
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
-        mainRespPacketJson = NetAPIModel.Instance.GetDataFromReceiveQueue();
-        if(mainRespPacketJson != string.Empty)
+        //Send
+        StartCoroutine(NetAPIModel.Instance.ProcessSend());
+        //Receive
+        if (NetAPIModel.Instance.HasReceive == true)
         {
+            mainRespPacketJson = NetAPIModel.Instance.ProcessReceive();
             ProcessMainRespPacket(mainRespPacketJson);
         }
-        else
-        {
-            //Do Nothing
-        }
-	}
+    }
 
     private void ProcessMainRespPacket(string mainRespPacketJson)
     {
-        Debug.Log("mainRespPacketJson: " + mainRespPacketJson);
+        //Debug.Log("mainRespPacketJson: " + mainRespPacketJson);
     }
 
     public void OnHelloWorldButtonClick()
     {
         PacketStruct.HelloWorldPacket helloWorld = new PacketStruct.HelloWorldPacket();
-        helloWorld.count = 1;
-        helloWorld.text = "1";
+        helloWorld.count = 0;
+        helloWorld.text = "0";
 
         string helloWorldJson = JsonUtility.ToJson(helloWorld);
 
@@ -51,14 +51,26 @@ public class RESTFulTestView : MonoBehaviour
 
         string reqMainPacketJson = JsonUtility.ToJson(reqMainPacket);
 
-        StartCoroutine(NetAPIModel.Instance.Send("http://192.168.0.103:3000/HelloWorld", reqMainPacketJson));
+        NetAPIModel.Instance.Send("http://localhost:3000/HelloWorld", reqMainPacketJson);
     }
 
+    public void OnServerVersionLoopTestButtonClick()
+    {
+        Debug.Log("Start Time: " + DateTime.Now.ToString());
+        for (int i = 0; i < 10000; i++)
+        {
+            OnGetServerVersionButtonClick();
+        }
+        Debug.Log("End Time: " + DateTime.Now.ToString());
+    }
+
+    int bundle = 0;
     public void OnGetServerVersionButtonClick()
     {
         PacketStruct.ServerVersionPacket serverVersion = new PacketStruct.ServerVersionPacket();
-        serverVersion.version = "1.0";
-        serverVersion.bundle = "1";
+        serverVersion.version = "1." + bundle.ToString();
+        serverVersion.bundle = bundle.ToString();
+        bundle++;
 
         string serverVersionJson = JsonUtility.ToJson(serverVersion);
 
@@ -68,6 +80,6 @@ public class RESTFulTestView : MonoBehaviour
 
         string reqMainPacketJson = JsonUtility.ToJson(reqMainPacket);
 
-        StartCoroutine(NetAPIModel.Instance.Send("http://192.168.0.103:3000/ServerVersion", reqMainPacketJson));
+        NetAPIModel.Instance.Send("http://localhost:3000/ServerVersion", reqMainPacketJson);
     }
 }
