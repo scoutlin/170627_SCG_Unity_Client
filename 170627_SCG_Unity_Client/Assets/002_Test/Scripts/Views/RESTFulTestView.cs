@@ -8,18 +8,28 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class RESTFulTestView : MonoBehaviour
 {
+    public Text mRESTFulStartEndTimeText;
+
     string mainRespPacketJson = string.Empty;
+
     private int bundle = 0;
+    private int count = 0;
+    private long tickTimeStart = 0;
+    private long tickTimeEnd = 0;
+    private double totalTime = 0;
+
+
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         RegistTable.Instance.mView.mRESTFulTestView = this;
         Debug.Log("Yeah");
-	}
+    }
 
     // Update is called once per frame
     void Update()
@@ -36,7 +46,17 @@ public class RESTFulTestView : MonoBehaviour
 
     private void ProcessMainRespPacket(string mainRespPacketJson)
     {
-        //Debug.Log("mainRespPacketJson: " + mainRespPacketJson);
+        mRESTFulStartEndTimeText.text = count.ToString();
+        count++;
+
+        if(count > 9999)
+        {
+            Debug.Log("End Time: " + DateTime.Now.ToString());
+            tickTimeEnd = DateTime.Now.Ticks;
+            totalTime = tickTimeEnd - tickTimeStart;
+            totalTime = totalTime * 0.0000001;
+            Debug.Log("totalTime: " + totalTime.ToString());
+        }
     }
 
     public void OnHelloWorldButtonClick()
@@ -60,11 +80,11 @@ public class RESTFulTestView : MonoBehaviour
     public void OnServerVersionLoopTestButtonClick()
     {
         Debug.Log("Start Time: " + DateTime.Now.ToString());
+        tickTimeStart = DateTime.Now.Ticks;
         for (int i = 0; i < 10000; i++)
         {
             OnGetServerVersionButtonClick();
         }
-        Debug.Log("End Time: " + DateTime.Now.ToString());
     }
 
 
@@ -84,77 +104,5 @@ public class RESTFulTestView : MonoBehaviour
         string reqMainPacketJson = JsonUtility.ToJson(reqMainPacket);
 
         NetAPIModel.Instance.Send("http://localhost:3000/ServerVersion", reqMainPacketJson);
-    }
-
-    public void RESTFulThreadTest(object nameOfThread)
-    {
-        //Test Use Thead
-        long tikcs;
-        DateTime dt1;
-        DateTime dt2;
-        dt1 = DateTime.Now;
-        for (int i = 0; i <= 10000; i++)
-        {
-            PacketStruct.ServerVersionPacket serverVersion = new PacketStruct.ServerVersionPacket();
-            serverVersion.version = "1." + i.ToString();
-            serverVersion.bundle = i.ToString();
-
-            string serverVersionJson = JsonUtility.ToJson(serverVersion);
-
-            PacketStruct.ReqMainPacket reqMainPacket = new PacketStruct.ReqMainPacket();
-            reqMainPacket.enumCmd = PacketStruct.EnumCmd.PackageVersion;
-            reqMainPacket.payload = serverVersionJson;
-
-            string reqMainPacketJson = JsonUtility.ToJson(reqMainPacket);
-
-            using (var client = new WebClient())
-            {
-                var values = new NameValueCollection();
-                values["HEADER"] = "ServerVersion";
-                values["JSON"] = reqMainPacketJson;
-
-                var response = client.UploadValues("http://localhost:3000/ServerVersion", values);
-
-                //var responseString = Encoding.Default.GetString(response);
-            }
-        }
-        dt2 = DateTime.Now;
-
-        tikcs = dt2.Ticks - dt1.Ticks;
-
-        double double_ticks = (double)tikcs;
-        double_ticks = double_ticks * 0.0000001;
-
-        Debug.Log(nameOfThread.ToString() + " double_ticks: " + double_ticks.ToString());
-    }
-
-    public void OnRESTFulThreadTest()
-    {
-        RESTFulThreadTest("thread1");
-    }
-
-        public void OnRESRFulThreadPressureTest()
-    {
-        Thread th1 = new Thread(RESTFulThreadTest);
-        Thread th2 = new Thread(RESTFulThreadTest);
-        Thread th3 = new Thread(RESTFulThreadTest);
-        Thread th4 = new Thread(RESTFulThreadTest);
-        Thread th5 = new Thread(RESTFulThreadTest);
-        Thread th6 = new Thread(RESTFulThreadTest);
-        Thread th7 = new Thread(RESTFulThreadTest);
-        Thread th8 = new Thread(RESTFulThreadTest);
-        Thread th9 = new Thread(RESTFulThreadTest);
-        Thread th10 = new Thread(RESTFulThreadTest);
-
-        th1.Start("Thread1");
-        th2.Start("Thread2");
-        th3.Start("Thread3");
-        th4.Start("Thread4");
-        th5.Start("Thread5");
-        th6.Start("Thread6");
-        th7.Start("Thread7");
-        th8.Start("Thread8");
-        th9.Start("Thread9");
-        th10.Start("Thread10");
     }
 }
