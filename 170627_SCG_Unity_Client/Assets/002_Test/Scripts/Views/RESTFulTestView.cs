@@ -14,8 +14,6 @@ public class RESTFulTestView : MonoBehaviour
 {
     public Text mRESTFulStartEndTimeText;
 
-    string mainRespPacketJson = string.Empty;
-
     private int bundle = 0;
     private int count = 0;
     private long tickTimeStart = 0;
@@ -39,7 +37,7 @@ public class RESTFulTestView : MonoBehaviour
         //Receive
         if (NetAPIModel.Instance.HasReceive == true)
         {
-            mainRespPacketJson = NetAPIModel.Instance.ProcessReceive();
+            string mainRespPacketJson = NetAPIModel.Instance.ProcessReceive();
             ProcessMainRespPacket(mainRespPacketJson);
         }
     }
@@ -69,7 +67,7 @@ public class RESTFulTestView : MonoBehaviour
         string helloWorldJson = JsonUtility.ToJson(helloWorld);
 
         PacketStruct.ReqMainPacket reqMainPacket = new PacketStruct.ReqMainPacket();
-        reqMainPacket.enumCmd = PacketStruct.EnumCmd.HelloWorld;
+        reqMainPacket.cmd = PacketStruct.EnumCmd.HelloWorld.ToString();
         reqMainPacket.payload = helloWorldJson;
 
         string reqMainPacketJson = JsonUtility.ToJson(reqMainPacket);
@@ -98,7 +96,7 @@ public class RESTFulTestView : MonoBehaviour
         string serverVersionJson = JsonUtility.ToJson(serverVersion);
 
         PacketStruct.ReqMainPacket reqMainPacket = new PacketStruct.ReqMainPacket();
-        reqMainPacket.enumCmd = PacketStruct.EnumCmd.PackageVersion;
+        reqMainPacket.cmd = PacketStruct.EnumCmd.PackageVersion.ToString();
         reqMainPacket.payload = serverVersionJson;
 
         string reqMainPacketJson = JsonUtility.ToJson(reqMainPacket);
