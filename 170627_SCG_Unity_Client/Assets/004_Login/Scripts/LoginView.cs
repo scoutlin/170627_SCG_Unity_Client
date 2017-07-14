@@ -27,37 +27,39 @@ public class LoginView : MonoBehaviour
     {
         Debug.Log("OnCreateButtonClick");
 
+        string mAccountInputFieldText = mAccountInputField.text;
+        string mPasswordInputFieldText = mPasswordInputField.text;
+
         mAccountInputField.text = string.Empty;
         mPasswordInputField.text = string.Empty;
 
-        //RSA
-        Cryptography.Instance.CreateRSAKey();
-        var publicRSAKeyString = Cryptography.Instance.GetPublicKeyString();
+        ////RSA
+        //Cryptography.Instance.CreateRSAKey();
+        //var publicRSAKeyString = Cryptography.Instance.GetPublicKeyString();
 
-        Debug.Log("publicRSAKeyString: " + publicRSAKeyString);
+        //Debug.Log("publicRSAKeyString: " + publicRSAKeyString);
 
         //Payload
         PacketStruct.EGS_Router.ReqGetKey mReqGetKey = new PacketStruct.EGS_Router.ReqGetKey();
-        mReqGetKey.publicRSAKeyString = publicRSAKeyString;
+        mReqGetKey.publicRSAKeyString = mAccountInputFieldText + "@" + mPasswordInputFieldText;
+        var mReqGetKeyJson = JsonUtility.ToJson(mReqGetKey);
 
         //MainPacket
         PacketStruct.ReqMainPacket mReqMainPacket = new PacketStruct.ReqMainPacket();
         mReqMainPacket.cmd = PacketStruct.EnumCmd.EGS_Router_GetKey.ToString();
-        mReqMainPacket.payload = JsonUtility.ToJson(mReqGetKey);
-
-        Debug.Log("Start RESTFul");
-
-
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/GetKey", JsonUtility.ToJson(mReqMainPacket));
+        mReqMainPacket.payload = mReqGetKeyJson;
+        var mReqMainPacketJson = JsonUtility.ToJson(mReqMainPacket);
 
 
+        Debug.Log("Start RESTFul: " + "/n" + 
+                  "url: " + "http://localhost:3000/egs-router/GetKey" + "/n" + 
+                  "json: " + mReqMainPacketJson);
 
+        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/GetKey", mReqMainPacketJson);
 
 
         mMessageBoxButtonText.text = mAccountInputField.text + "/" + mPasswordInputField.text;
         mMessageBoxButton.gameObject.SetActive(true);
-
-
     }
 
     public void OnLoginButtonClick()

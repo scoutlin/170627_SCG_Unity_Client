@@ -1,4 +1,5 @@
 ﻿using SCG_Unity_Client_API;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,11 +30,13 @@ public class EntryView : MonoBehaviour {
     {
         var mRespMainPacket = JsonUtility.FromJson<PacketStruct.RespMainPacket>(mainRespPacketJson);
 
-
         Debug.Log("mainRespPacketJson:" + mainRespPacketJson);
         Debug.Log("mRespMainPacket.cmd:" + mRespMainPacket.cmd);
         Debug.Log("mRespMainPacket.isError:" + mRespMainPacket.isError);
         Debug.Log("mRespMainPacket.payload:" + mRespMainPacket.payload);
+
+        PacketStruct.EnumCmd enumCmd = (PacketStruct.EnumCmd)Enum.Parse(typeof(PacketStruct.EnumCmd), mRespMainPacket.cmd);
+        PacketPaserModule.Instance.ProcessParser(enumCmd, mRespMainPacket.payload);
     }
 
     private IEnumerator InitialProcess()
