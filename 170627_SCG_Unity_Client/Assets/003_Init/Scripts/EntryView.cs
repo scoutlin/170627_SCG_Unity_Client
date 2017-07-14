@@ -36,9 +36,7 @@ public class EntryView : MonoBehaviour {
     }
 
     private IEnumerator InitialProcess()
-    {
-        Cryptography.Instance.CreateAESKey();
-        
+    {        
         SceneManager.LoadScene("Login", LoadSceneMode.Additive);
 
         yield return null;

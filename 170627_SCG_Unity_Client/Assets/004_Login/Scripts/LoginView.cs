@@ -113,19 +113,38 @@ public class LoginView : MonoBehaviour
     {
         Debug.Log("OnFacebookLoginButtonClick");
 
-        ////Payload
-        //PacketStruct.EGS_Router.ReqGetKey mReqGetKey = new PacketStruct.EGS_Router.ReqGetKey();
-        //mReqGetKey.publicRSAKeyString = publicRSAKeyString;
+        Debug.Log("----------------RSA-------------------");
 
-        ////MainPacket
-        //PacketStruct.ReqMainPacket mReqMainPacket = new PacketStruct.ReqMainPacket();
-        //mReqMainPacket.enumCmd = PacketStruct.EnumCmd.EGS_Router_GetKey;
-        //mReqMainPacket.payload = JsonUtility.ToJson(mReqGetKey);
+        Cryptography.Instance.CreateRSAKeyLocal();
+        Cryptography.Instance.SetRSAPublicKeyRemote(Cryptography.Instance.GetRSAPublicKeyLocalString());
 
-        //Debug.Log("Start RESTFul");
+        var mRSAString = "TestString";
+        Debug.Log("mRSAString: " + mRSAString);
+        var byteTest = Encoding.Unicode.GetBytes(mRSAString);
+        var byteTestString = "byteTest ";
+        for (int i = 0; i < byteTest.Length; i++)
+        {
+            byteTestString += byteTest[i].ToString() + ",";
+        }
+        Debug.Log("byteTestString: " + byteTestString);
+        var testStringEncrypt = Cryptography.Instance.RSAEncrypt(byteTest);
+        Debug.Log("testStringEncrypt: " + testStringEncrypt);
+        var testStringDecrypt = Cryptography.Instance.RSADecrypt(testStringEncrypt);
+        //Debug.Log("testStringDecrypt: " + testStringDecrypt);
 
 
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/GetKey", "fuck");
+        Debug.Log("---------------AES------------------");
+
+        Cryptography.Instance.CreateAESKey();
+
+        var mAESPair = Cryptography.Instance.GetAESKeyPair("Local");
+
+        var mAESString = "TestString";
+        Debug.Log("mAESString: " + mAESString);
+        var mAESEncryptString = Cryptography.Instance.AESEncrypt(mAESString, mAESPair.mAesKey, mAESPair.mAesIV);
+        Debug.Log("mAESEncryptString: " + mAESEncryptString);
+        var mAESDecryptString = Cryptography.Instance.AESDecrypte(mAESEncryptString, mAESPair.mAesKey, mAESPair.mAesIV);
+        Debug.Log("mAESDecryptString: " + mAESDecryptString);
     }
 
     public void OnMessageBoxButtonClick()
