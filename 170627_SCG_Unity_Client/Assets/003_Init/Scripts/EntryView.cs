@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,7 +12,7 @@ public class EntryView : MonoBehaviour {
 	void Start ()
     {
         StartCoroutine(InitialProcess());
-	}
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -30,19 +31,16 @@ public class EntryView : MonoBehaviour {
     {
         var mRespMainPacket = JsonUtility.FromJson<PacketStruct.RespMainPacket>(mainRespPacketJson);
 
-        Debug.Log("mainRespPacketJson:" + mainRespPacketJson);
-        Debug.Log("mRespMainPacket.cmd:" + mRespMainPacket.cmd);
-        Debug.Log("mRespMainPacket.isError:" + mRespMainPacket.isError);
-        Debug.Log("mRespMainPacket.payload:" + mRespMainPacket.payload);
-
         PacketStruct.EnumCmd enumCmd = (PacketStruct.EnumCmd)Enum.Parse(typeof(PacketStruct.EnumCmd), mRespMainPacket.cmd);
         PacketPaserModule.Instance.ProcessParser(enumCmd, mRespMainPacket.payload);
     }
 
     private IEnumerator InitialProcess()
     {
-        yield return new WaitForSeconds(1);
-
+        Cryptography.Instance.CreateAESKey();
+        
         SceneManager.LoadScene("Login", LoadSceneMode.Additive);
+
+        yield return null;
     }
 }

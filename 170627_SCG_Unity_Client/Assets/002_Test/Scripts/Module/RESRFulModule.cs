@@ -17,7 +17,7 @@ public class RESRFulModule : MonoBehaviour
 
             var response = client.UploadValues("http://localhost:3000/ServerVersion", values);
 
-            //var responseString = Encoding.Default.GetString(response);
+            var responseString = Encoding.Default.GetString(response);
         }
     }
 }

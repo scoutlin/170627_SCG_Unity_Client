@@ -30,9 +30,15 @@ public class PacketPaserModule
                 }
                 break;
 
-            case PacketStruct.EnumCmd.EGS_Router_GetKey:
+            case PacketStruct.EnumCmd.EGS_Router_GetRSAKey:
                 {
-                    Debug.Log("PacketParserModule - EGS_Router_GetKey");
+                    Debug.Log("PacketParserModule - EGS_Router_GetRSAKey");
+
+                    var mRespGetRSAKey = JsonUtility.FromJson<PacketStruct.EGS_Router.RespGetRSAKey>(json);
+
+                    Cryptography.Instance.SetRSAPublicKeyRemote(mRespGetRSAKey.publicRSAKeyString);
+
+                    RegistTable.CommonDate.reqRSAKeyComplete = true;
                 }
                 break;
 
