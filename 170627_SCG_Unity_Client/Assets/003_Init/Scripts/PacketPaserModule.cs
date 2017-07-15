@@ -36,7 +36,7 @@ public class PacketPaserModule
 
                     var mRespGetRSAKey = JsonUtility.FromJson<PacketStruct.EGS_Router.RespGetRSAKey>(json);
 
-                    Cryptography.Instance.SetRSAPublicKeyRemote(mRespGetRSAKey.publicRSAKeyString);
+                    Debug.Log("mRespGetRSAKey.mRSAPuclicKeyString: " + mRespGetRSAKey.mRSAPublicKeyString);
 
                     RegistTable.CommonDate.reqRSAKeyComplete = true;
                 }

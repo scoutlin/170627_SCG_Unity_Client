@@ -32,6 +32,13 @@ public class EntryView : MonoBehaviour {
         var mRespMainPacket = JsonUtility.FromJson<PacketStruct.RespMainPacket>(mainRespPacketJson);
 
         PacketStruct.EnumCmd enumCmd = (PacketStruct.EnumCmd)Enum.Parse(typeof(PacketStruct.EnumCmd), mRespMainPacket.cmd);
+
+        Debug.Log("mRespMainPacket.cmd: " + mRespMainPacket.cmd);
+        Debug.Log("mRespMainPacket.token: " + mRespMainPacket.token);
+        Debug.Log("mRespMainPacket.timeStamp: " + mRespMainPacket.timeStamp);
+        Debug.Log("mRespMainPacket.payload: " + mRespMainPacket.payload);
+        Debug.Log("mRespMainPacket.errorMessage: " + mRespMainPacket.errorMessage);
+
         PacketPaserModule.Instance.ProcessParser(enumCmd, mRespMainPacket.payload);
     }
 

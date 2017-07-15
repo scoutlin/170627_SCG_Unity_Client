@@ -1,4 +1,5 @@
 ﻿using SCG_Unity_Client_API;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -40,12 +41,15 @@ public class LoginView : MonoBehaviour
 
         //Payload
         PacketStruct.EGS_Router.ReqGetRSAKey mReqGetKey = new PacketStruct.EGS_Router.ReqGetRSAKey();
-        mReqGetKey.publicRSAKeyString = mAccountInputFieldText + "@" + mPasswordInputFieldText;
+        mReqGetKey.mRSAPublicKeyString = mAccountInputFieldText + "@" + mPasswordInputFieldText;
         var mReqGetKeyJson = JsonUtility.ToJson(mReqGetKey);
 
         //MainPacket
+        string stringGuid = Guid.NewGuid().ToString();
         PacketStruct.ReqMainPacket mReqMainPacket = new PacketStruct.ReqMainPacket();
         mReqMainPacket.cmd = PacketStruct.EnumCmd.EGS_Router_GetRSAKey.ToString();
+        mReqMainPacket.token = stringGuid;
+        mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
         mReqMainPacket.payload = mReqGetKeyJson;
         var mReqMainPacketJson = JsonUtility.ToJson(mReqMainPacket);
 
@@ -65,31 +69,31 @@ public class LoginView : MonoBehaviour
         RegistTable.CommonDate.reqRSAKeyComplete = false;
         //------------------------------------------------------------------------------------------------
 
-        //-------------------------------GetToken---------------------------------------------------------
-        Cryptography.AESKeyPaire mAESKeyPaire = Cryptography.Instance.GetAESKeyPair("Local");
+        ////-------------------------------GetToken---------------------------------------------------------
+        //Cryptography.AESKeyPaire mAESKeyPaire = Cryptography.Instance.GetAESKeyPair("Local");
 
-        var account = Encoding.Unicode.GetBytes(mAccountInputFieldText);
-        var password = Encoding.Unicode.GetBytes(mPasswordInputFieldText);
-        var key = mAESKeyPaire.mAesKey;
-        var iv = mAESKeyPaire.mAesIV;
+        //var account = Encoding.Unicode.GetBytes(mAccountInputFieldText);
+        //var password = Encoding.Unicode.GetBytes(mPasswordInputFieldText);
+        //var key = mAESKeyPaire.mAesKey;
+        //var iv = mAESKeyPaire.mAesIV;
 
-        PacketStruct.EGS_Router.ReqGetToken mReqGetToken = new PacketStruct.EGS_Router.ReqGetToken();
-        mReqGetToken.account = Cryptography.Instance.RSAEncrypt(account);
-        mReqGetToken.password = Cryptography.Instance.RSAEncrypt(password);
-        mReqGetToken.key = Cryptography.Instance.RSAEncrypt(key);
-        mReqGetToken.iv = Cryptography.Instance.RSAEncrypt(iv);
-        var ReqGetTokenJson = JsonUtility.ToJson(mReqGetToken);
+        //PacketStruct.EGS_Router.ReqGetToken mReqGetToken = new PacketStruct.EGS_Router.ReqGetToken();
+        //mReqGetToken.account = Cryptography.Instance.RSAEncrypt(account);
+        //mReqGetToken.password = Cryptography.Instance.RSAEncrypt(password);
+        //mReqGetToken.key = Cryptography.Instance.RSAEncrypt(key);
+        //mReqGetToken.iv = Cryptography.Instance.RSAEncrypt(iv);
+        //var ReqGetTokenJson = JsonUtility.ToJson(mReqGetToken);
 
-        mReqMainPacket.cmd = PacketStruct.EnumCmd.EGS_Router_GetToken.ToString();
-        mReqMainPacket.payload = ReqGetTokenJson;
-        mReqMainPacketJson = JsonUtility.ToJson(mReqMainPacket);
+        //mReqMainPacket.cmd = PacketStruct.EnumCmd.EGS_Router_GetToken.ToString();
+        //mReqMainPacket.payload = ReqGetTokenJson;
+        //mReqMainPacketJson = JsonUtility.ToJson(mReqMainPacket);
 
-        Debug.Log("Start RESTFul: " + "\n" +
-                  "url: " + "http://localhost:3000/egs-router/GetToken" + "\n" +
-                  "json: " + mReqMainPacketJson);
+        //Debug.Log("Start RESTFul: " + "\n" +
+        //          "url: " + "http://localhost:3000/egs-router/GetToken" + "\n" +
+        //          "json: " + mReqMainPacketJson);
 
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/GetToken", mReqMainPacketJson);
-        //-----------------------------------------------------------------------------------------------
+        //NetAPIModel.Instance.Send("http://localhost:3000/egs-router/GetToken", mReqMainPacketJson);
+        ////-----------------------------------------------------------------------------------------------
         mMessageBoxButtonText.text = mAccountInputField.text + "/" + mPasswordInputField.text;
         mMessageBoxButton.gameObject.SetActive(true);
 
@@ -115,8 +119,8 @@ public class LoginView : MonoBehaviour
 
         Debug.Log("----------------RSA-------------------");
 
-        Cryptography.Instance.CreateRSAKeyLocal();
-        Cryptography.Instance.SetRSAPublicKeyRemote(Cryptography.Instance.GetRSAPublicKeyLocalString());
+        Cryptography.Instance.CreateRSAKey();
+
 
         var mRSAString = "TestString";
         Debug.Log("mRSAString: " + mRSAString);
@@ -127,9 +131,9 @@ public class LoginView : MonoBehaviour
             byteTestString += byteTest[i].ToString() + ",";
         }
         Debug.Log("byteTestString: " + byteTestString);
-        var testStringEncrypt = Cryptography.Instance.RSAEncrypt(byteTest);
+        var testStringEncrypt = "testStringEncrypt"; // Cryptography.Instance.RSAEncrypt(byteTest);
         Debug.Log("testStringEncrypt: " + testStringEncrypt);
-        var testStringDecrypt = Cryptography.Instance.RSADecrypt(testStringEncrypt);
+        var testStringDecrypt = "testStringDecrypt"; // Cryptography.Instance.RSADecrypt(testStringEncrypt);
         //Debug.Log("testStringDecrypt: " + testStringDecrypt);
 
 
