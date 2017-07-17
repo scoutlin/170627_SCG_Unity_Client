@@ -27,23 +27,16 @@ public class EntryView : MonoBehaviour {
         }
     }
 
-    private void ProcessMainRespPacket(string mainRespPacketJson)
+    private void ProcessMainRespPacket(string jsonRespMainPacket)
     {
-        var mRespMainPacket = JsonUtility.FromJson<PacketStruct.RespMainPacket>(mainRespPacketJson);
-
-        PacketStruct.EnumCmd enumCmd = (PacketStruct.EnumCmd)Enum.Parse(typeof(PacketStruct.EnumCmd), mRespMainPacket.cmd);
-
-        Debug.Log("mRespMainPacket.cmd: " + mRespMainPacket.cmd);
-        Debug.Log("mRespMainPacket.token: " + mRespMainPacket.token);
-        Debug.Log("mRespMainPacket.timeStamp: " + mRespMainPacket.timeStamp);
-        Debug.Log("mRespMainPacket.payload: " + mRespMainPacket.payload);
-        Debug.Log("mRespMainPacket.errorMessage: " + mRespMainPacket.errorMessage);
-
-        PacketPaserModule.Instance.ProcessParser(enumCmd, mRespMainPacket.payload);
+        PacketPaserModule.Instance.ProcessParser(jsonRespMainPacket);
     }
 
     private IEnumerator InitialProcess()
-    {        
+    {
+        Cryptography.Instance.CreateRSAKey();
+        Cryptography.Instance.CreateAESKey();
+
         SceneManager.LoadScene("Login", LoadSceneMode.Additive);
 
         yield return null;

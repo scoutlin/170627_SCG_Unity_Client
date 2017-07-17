@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,7 +33,8 @@ public class LoginView : MonoBehaviour
         //--------------------------GetRSAKey----------------------------------------
         string mAccountInputFieldText = mAccountInputField.text;
         string mPasswordInputFieldText = mPasswordInputField.text;
-
+        string mRSAPublicKeyString = string.Empty;
+        RSAParameters mRSAPublicKey;
         ////RSA
         //Cryptography.Instance.CreateRSAKey();
         //var publicRSAKeyString = Cryptography.Instance.GetPublicKeyString();
@@ -40,25 +42,28 @@ public class LoginView : MonoBehaviour
         //Debug.Log("publicRSAKeyString: " + publicRSAKeyString);
 
         //Payload
+        mRSAPublicKey = Cryptography.Instance.GetRSAPublicKey("local");
+        mRSAPublicKeyString = Cryptography.Instance.TranslateRSAKeyToRSAKeyString(mRSAPublicKey);
+
         PacketStruct.EGS_Router.ReqGetRSAKey mReqGetKey = new PacketStruct.EGS_Router.ReqGetRSAKey();
-        mReqGetKey.mRSAPublicKeyString = mAccountInputFieldText + "@" + mPasswordInputFieldText;
+        mReqGetKey.mRSAPublicKeyString = mRSAPublicKeyString;
         var mReqGetKeyJson = JsonUtility.ToJson(mReqGetKey);
 
         //MainPacket
-        string stringGuid = Guid.NewGuid().ToString();
+        //string stringGuid = Guid.NewGuid().ToString();
         PacketStruct.ReqMainPacket mReqMainPacket = new PacketStruct.ReqMainPacket();
         mReqMainPacket.cmd = PacketStruct.EnumCmd.EGS_Router_GetRSAKey.ToString();
-        mReqMainPacket.token = stringGuid;
+        mReqMainPacket.token = string.Empty;
         mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
         mReqMainPacket.payload = mReqGetKeyJson;
         var mReqMainPacketJson = JsonUtility.ToJson(mReqMainPacket);
 
 
         //Debug.Log("Start RESTFul: " + "/n" +
-        //          "url: " + "http://localhost:3000/egs-router/GetRSAKey" + "/n" +
+        //          "url: " + "http://localhost:3000/egs-router/" + "/n" +
         //          "json: " + mReqMainPacketJson);
 
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/GetRSAKey", mReqMainPacketJson);
+        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", mReqMainPacketJson);
 
 
 

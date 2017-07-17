@@ -1,6 +1,8 @@
 ﻿using SCG_Unity_Client_API;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class PacketPaserModule
@@ -20,9 +22,33 @@ public class PacketPaserModule
         }
     }
 
-    public void ProcessParser(PacketStruct.EnumCmd enumCmd, string json)
+    public void ProcessParser(string jsonRespMainPacket)
     {
-        switch(enumCmd)
+        Debug.Log("jsonRespMainPacket: " + jsonRespMainPacket);
+
+        var mRespMainPacket = JsonUtility.FromJson<PacketStruct.RespMainPacket>(jsonRespMainPacket);
+        var payload = mRespMainPacket.payload;
+
+        PacketStruct.EnumCmd enumCmd = (PacketStruct.EnumCmd)Enum.Parse(typeof(PacketStruct.EnumCmd), mRespMainPacket.cmd);
+
+        Debug.Log("mRespMainPacket.cmd: " + mRespMainPacket.cmd);
+        Debug.Log("mRespMainPacket.token: " + mRespMainPacket.token);
+        Debug.Log("mRespMainPacket.timeStamp: " + mRespMainPacket.timeStamp);
+        Debug.Log("mRespMainPacket.payload: " + mRespMainPacket.payload);
+        Debug.Log("mRespMainPacket.errorMessage: " + mRespMainPacket.errorMessage);
+
+        if(mRespMainPacket.errorMessage != string.Empty)
+        {
+            throw new Exception("RespMainPacket Error!!");
+        }
+
+        if(RegistTable.CommonDate.reqRSAKeyComplete == true)
+        {
+
+        }
+
+
+        switch (enumCmd)
         {
             default:
                 {
@@ -34,15 +60,33 @@ public class PacketPaserModule
                 {
                     Debug.Log("PacketParserModule - EGS_Router_GetRSAKey");
 
-                    var mRespGetRSAKey = JsonUtility.FromJson<PacketStruct.EGS_Router.RespGetRSAKey>(json);
+                    string mRSAPublicKeyString = string.Empty;
+                    RSAParameters mRSAPublicKey;
+                    string cryptTextToken = mRespMainPacket.token;
+                    string plainTextToken = Cryptography.Instance.RSADecrypt(mRespMainPacket.token);
+                    Debug.Log("cryptTextToken: " + cryptTextToken);
+                    Debug.Log("plainTextToken: " + plainTextToken);
 
-                    Debug.Log("mRespGetRSAKey.mRSAPuclicKeyString: " + mRespGetRSAKey.mRSAPublicKeyString);
+                    var mRespGetRSAKey = JsonUtility.FromJson<PacketStruct.EGS_Router.RespGetRSAKey>(mRespMainPacket.payload);
+                    mRSAPublicKeyString = mRespGetRSAKey.mRSAPublicKeyString;
+                    mRSAPublicKey = Cryptography.Instance.TranslateRSAKeyStringToRSAKey(mRSAPublicKeyString);
+                    Cryptography.Instance.SetRSAPublicKey("server", mRSAPublicKey);
+
+                    mRSAPublicKey = Cryptography.Instance.GetRSAPublicKey("server");
+                    cryptTextToken = Cryptography.Instance.RSAEncrypt(mRSAPublicKey, plainTextToken);
+                    Debug.Log("cryptTextToken: " + mRespMainPacket.token);
+
+                    PacketStruct.ReqMainPacket mReqMainPacket = new PacketStruct.ReqMainPacket();
+                    mReqMainPacket.cmd = PacketStruct.EnumCmd.EGS_Router_GetAESKey.ToString();
+                    mReqMainPacket.token = cryptTextToken;
+                    mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
+                    mReqMainPacket.payload = string.Empty;
 
                     RegistTable.CommonDate.reqRSAKeyComplete = true;
                 }
                 break;
 
-            case PacketStruct.EnumCmd.EGS_Router_GetToken:
+            case PacketStruct.EnumCmd.EGS_Router_GetAESKey:
                 {
                     Debug.Log("PacketParserModule - EGS_Router_GetToken");
                 }
