@@ -26,53 +26,15 @@ public class LoginView : MonoBehaviour
 		
 	}
 
+
     public IEnumerator CreateButtonClick()
     {
         Debug.Log("OnCreateButtonClick");
 
-        //--------------------------GetRSAKey----------------------------------------
         string mAccountInputFieldText = mAccountInputField.text;
         string mPasswordInputFieldText = mPasswordInputField.text;
-        string mRSAPublicKeyString = string.Empty;
-        RSAParameters mRSAPublicKey;
-        ////RSA
-        //Cryptography.Instance.CreateRSAKey();
-        //var publicRSAKeyString = Cryptography.Instance.GetPublicKeyString();
 
-        //Debug.Log("publicRSAKeyString: " + publicRSAKeyString);
-
-        //Payload
-        mRSAPublicKey = Cryptography.Instance.GetRSAPublicKey("local");
-        mRSAPublicKeyString = Cryptography.Instance.TranslateRSAKeyToRSAKeyString(mRSAPublicKey);
-
-        PacketStruct.EGS_Router.ReqGetRSAKey mReqGetKey = new PacketStruct.EGS_Router.ReqGetRSAKey();
-        mReqGetKey.mRSAPublicKeyString = mRSAPublicKeyString;
-        var mReqGetKeyJson = JsonUtility.ToJson(mReqGetKey);
-
-        //MainPacket
-        //string stringGuid = Guid.NewGuid().ToString();
-        PacketStruct.ReqMainPacket mReqMainPacket = new PacketStruct.ReqMainPacket();
-        mReqMainPacket.cmd = PacketStruct.EnumCmd.EGS_Router_GetRSAKey.ToString();
-        mReqMainPacket.token = string.Empty;
-        mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
-        mReqMainPacket.payload = mReqGetKeyJson;
-        var mReqMainPacketJson = JsonUtility.ToJson(mReqMainPacket);
-
-
-        //Debug.Log("Start RESTFul: " + "/n" +
-        //          "url: " + "http://localhost:3000/egs-router/" + "/n" +
-        //          "json: " + mReqMainPacketJson);
-
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", mReqMainPacketJson);
-
-
-
-        while (RegistTable.CommonDate.reqRSAKeyComplete == false)
-        {
-            yield return null;
-        }
-        RegistTable.CommonDate.reqRSAKeyComplete = false;
-        //------------------------------------------------------------------------------------------------
+        yield return null;
 
         ////-------------------------------GetToken---------------------------------------------------------
         //Cryptography.AESKeyPaire mAESKeyPaire = Cryptography.Instance.GetAESKeyPair("Local");

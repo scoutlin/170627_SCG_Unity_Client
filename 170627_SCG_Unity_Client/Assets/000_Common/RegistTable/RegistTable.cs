@@ -6,8 +6,16 @@ public class RegistTable
 {
     public class CommonDate
     {
-        public static bool reqRSAKeyComplete = false;
+        public class Flags
+        {
+            public static bool reqRSAKeyComplete = false;
+            public static bool reqAESKeyComplete = false;
+        }
 
+        public class Variables
+        {
+            
+        }
     }
 
     public class View
