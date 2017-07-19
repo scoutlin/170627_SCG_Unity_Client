@@ -8,8 +8,11 @@ public class RegistTable
     {
         public class Flags
         {
+            public static bool isNeedEncrypt = true;
+
             public static bool reqRSAKeyComplete = false;
             public static bool reqAESKeyComplete = false;
+            public static bool reqRegistMemberComplete = false;
         }
 
         public class Variables

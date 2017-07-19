@@ -120,17 +120,22 @@ public class PacketPaserModule
                             byte[] mAESKey = null;
                             byte[] mAESIV = null;
                             Cryptography.AESKeyPaire mAESKeyPaire = new Cryptography.AESKeyPaire();
-                            mAESKey = Encoding.UTF8.GetBytes(plainAESKey);
-                            mAESIV = Encoding.UTF8.GetBytes(plainAESIV);
+                            //mAESKey = Encoding.UTF8.GetBytes(plainAESKey);
+                            //mAESIV = Encoding.UTF8.GetBytes(plainAESIV);
+                            //var bytesCypherText = Convert.FromBase64String(cyphertext);
+                            //var encryptJson = Convert.ToBase64String(bytesCypherText);
+                            mAESKey = Convert.FromBase64String(plainAESKey);
+                            mAESIV = Convert.FromBase64String(plainAESIV);
+
                             mAESKeyPaire.mAesKey = mAESKey;
                             mAESKeyPaire.mAesIV = mAESIV;
 
                             Cryptography.Instance.SetAESKeyPair("local", mAESKeyPaire);
 
-                            Debug.Log("encryptAESKey: " + encryptAESKey);
-                            Debug.Log("encryptAESIV: " + encryptAESIV);
-                            Debug.Log("plainAESKey: " + plainAESKey);
-                            Debug.Log("plainAESIV: " + plainAESIV);
+                            //Debug.Log("encryptAESKey: " + encryptAESKey);
+                            //Debug.Log("encryptAESIV: " + encryptAESIV);
+                            //Debug.Log("plainAESKey: " + plainAESKey);
+                            //Debug.Log("plainAESIV: " + plainAESIV);
                             string byteStringmAESKey = string.Empty;
                             string byteStringmAESIV = string.Empty;
                             for (int i = 0; i < mAESKey.Length; i++)
@@ -141,10 +146,18 @@ public class PacketPaserModule
                             {
                                 byteStringmAESIV += mAESIV[i].ToString() + ", ";
                             }
-                            Debug.Log("byteStringmAESKey: " + byteStringmAESKey);
-                            Debug.Log("byteStringmAESIV: " + byteStringmAESIV);
+                            Debug.Log("length: " + mAESKey .Length + "/" + "byteStringmAESKey: " + byteStringmAESKey);
+                            Debug.Log("length: " + mAESIV.Length + "/" + "byteStringmAESIV: " + byteStringmAESIV);
 
                             RegistTable.CommonDate.Flags.reqAESKeyComplete = true;
+                        }
+                        break;
+
+                    case PacketStruct.EnumCmd.EGS_Router_RegistMember:
+                        {
+                            Debug.Log("PacketParserModule - EGS_Router_GetToken");
+
+                            RegistTable.CommonDate.Flags.reqRegistMemberComplete = true;
                         }
                         break;
                 }
