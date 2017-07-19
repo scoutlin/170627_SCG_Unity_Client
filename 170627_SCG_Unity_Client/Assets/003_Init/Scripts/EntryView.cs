@@ -5,8 +5,12 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class EntryView : MonoBehaviour {
+
+    public Text ButtonText;
+
 
     // Use this for initialization
     void Start()
@@ -45,8 +49,14 @@ public class EntryView : MonoBehaviour {
             PacketStruct.ReqMainPacket mReqMainPacket = null;
             PacketStruct.EGS_Router.ReqGetRSAKey mReqGetKey = null;
 
+            Debug.Log("Create RSA Start - DateTime: " + DateTime.Now.ToString());
+            Console.WriteLine("Create RSA Start - DateTime: " + DateTime.Now.ToString());
+            ButtonText.text = "Create RSA Start - DateTime: " + DateTime.Now.ToString();
             //Create Local RSAKey
             Cryptography.Instance.CreateRSAKey();
+            ButtonText.text = "Create RSA End - DateTime: " + DateTime.Now.ToString();
+            Debug.Log("Create RSA End - DateTime: " + DateTime.Now.ToString());
+            Console.WriteLine("Create RSA End - DateTime: " + DateTime.Now.ToString());
 
             //Initial NetWork
             //--------------------------GetRSAKey----------------------------------------
