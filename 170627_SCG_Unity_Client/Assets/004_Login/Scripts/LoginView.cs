@@ -14,10 +14,12 @@ public class LoginView : MonoBehaviour
     public Button mMessageBoxButton;
     public Text mMessageBoxButtonText;
 
+    public Text TestText;
+
     // Use this for initialization
     void Start ()
     {
-		
+        RegistTable.Instance.mView.mLoginView = this;
 	}
 	
 	// Update is called once per frame
@@ -150,6 +152,8 @@ public class LoginView : MonoBehaviour
         //Debug.Log("mAESEncryptString: " + mAESEncryptString);
         //var mAESDecryptString = Cryptography.Instance.AESDecrypte(mAESEncryptString, mAESPair.mAesKey, mAESPair.mAesIV);
         //Debug.Log("mAESDecryptString: " + mAESDecryptString);
+
+        StartCoroutine(TestIfNodejsEventUseSameResAndReq());
     }
 
     public void OnMessageBoxButtonClick()
@@ -157,5 +161,26 @@ public class LoginView : MonoBehaviour
         mMessageBoxButton.gameObject.SetActive(false);
 
         Debug.Log("OnMessageBoxButtonClick");
+    }
+
+    public IEnumerator TestIfNodejsEventUseSameResAndReq()
+    {
+
+        for (int i = 0; i < 1000; i++)
+        {
+            PacketStruct.EGS_Router.ReqRegistMember mReqRegistMember = new PacketStruct.EGS_Router.ReqRegistMember();
+            mReqRegistMember.account = "3";
+            var jsonReqRegistMember = JsonUtility.ToJson(mReqRegistMember);
+
+            PacketStruct.ReqMainPacket mReqMainPacket = new PacketStruct.ReqMainPacket();
+            mReqMainPacket.cmd = PacketStruct.EnumCmd.EGS_Router_RegistMember.ToString();
+            mReqMainPacket.payload = jsonReqRegistMember;
+            var jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
+
+            NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+        }
+
+
+        yield return null;
     }
 }

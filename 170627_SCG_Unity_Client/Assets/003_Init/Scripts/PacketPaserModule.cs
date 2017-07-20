@@ -53,26 +53,27 @@ public class PacketPaserModule
         }
         else
         {
-            if (enumCmd == PacketStruct.EnumCmd.EGS_Router_GetRSAKey)
-            {
-                Debug.Log("cryptotextToken receive from server : " + cryptotextToken);
-                plaintextToken = Cryptography.Instance.RSADecrypt(cryptotextToken);
-                Debug.Log("plaintextToken receive from server : : " + plaintextToken);
-                isTokenExist = Cryptography.Instance.CheckTokenExist(plaintextToken);
-                isTokenExist = true;
-            }
-            else
-            {
-                Debug.Log("cryptotextToken receive from server : " + cryptotextToken);
-                plaintextToken = Cryptography.Instance.RSADecrypt(cryptotextToken);
-                Debug.Log("plaintextToken receive from server : " + plaintextToken);
-                isTokenExist = Cryptography.Instance.CheckTokenExist(plaintextToken);               
-            }
+            //if (enumCmd == PacketStruct.EnumCmd.EGS_Router_GetRSAKey)
+            //{
+            //    Debug.Log("cryptotextToken receive from server : " + cryptotextToken);
+            //    plaintextToken = Cryptography.Instance.RSADecrypt(cryptotextToken);
+            //    Debug.Log("plaintextToken receive from server : : " + plaintextToken);
+            //    isTokenExist = Cryptography.Instance.CheckTokenExist(plaintextToken);
+            //    isTokenExist = true;
+            //}
+            //else
+            //{
+            //    Debug.Log("cryptotextToken receive from server : " + cryptotextToken);
+            //    plaintextToken = Cryptography.Instance.RSADecrypt(cryptotextToken);
+            //    Debug.Log("plaintextToken receive from server : " + plaintextToken);
+            //    isTokenExist = Cryptography.Instance.CheckTokenExist(plaintextToken);               
+            //}
 
-            Debug.Log("isTokenExist: " + isTokenExist);
+            //Debug.Log("isTokenExist: " + isTokenExist);
 
-            if (isTokenExist == true)
-            {
+            //if (isTokenExist == true)
+            if (true)
+                {
                 switch (enumCmd)
                 {
                     default:
@@ -155,8 +156,13 @@ public class PacketPaserModule
 
                     case PacketStruct.EnumCmd.EGS_Router_RegistMember:
                         {
-                            Debug.Log("PacketParserModule - EGS_Router_GetToken");
+                            //Debug.Log("PacketParserModule - EGS_Router_GetToken");
 
+                            PacketStruct.EGS_Router.RespRegistMember mRespRegistMember = new PacketStruct.EGS_Router.RespRegistMember();
+                            mRespRegistMember = JsonUtility.FromJson<PacketStruct.EGS_Router.RespRegistMember>(payload);
+
+                            //Debug.Log("respAccount: " + mRespRegistMember.respAccount);
+                            RegistTable.Instance.mView.mLoginView.TestText.text += mRespRegistMember.respAccount;
                             RegistTable.CommonDate.Flags.reqRegistMemberComplete = true;
                         }
                         break;

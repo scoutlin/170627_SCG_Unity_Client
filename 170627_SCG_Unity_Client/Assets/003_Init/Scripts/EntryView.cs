@@ -38,6 +38,7 @@ public class EntryView : MonoBehaviour {
 
     private IEnumerator InitialProcess()
     {
+        //Exchange Key when initial
         if (RegistTable.CommonDate.Flags.isNeedEncrypt == true)
         {
             string plaintextToken = string.Empty;

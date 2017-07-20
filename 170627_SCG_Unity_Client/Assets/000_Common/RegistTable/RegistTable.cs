@@ -24,6 +24,7 @@ public class RegistTable
     public class View
     {
         public RESTFulTestView mRESTFulTestView = null;
+        public LoginView mLoginView = null;
     }
 
     public static RegistTable mRegistTable = null;
