@@ -29,7 +29,7 @@ public class LoginView : MonoBehaviour
 	}
 
 
-    public IEnumerator CreateButtonClick()
+    public IEnumerator Enumerator_CreateButtonClick()
     {
         Debug.Log("OnCreateButtonClick");
 
@@ -94,7 +94,32 @@ public class LoginView : MonoBehaviour
         ////This version can multy regist for one token 
         //RegistTable.CommonDate.Flags.reqRegistMemberComplete = false;
 
+        string ID = string.Empty;
+        string pwd = string.Empty;
+        PacketStruct.EGS_Router.ReqRegistMember mReqRegistMember = new PacketStruct.EGS_Router.ReqRegistMember();
+        PacketStruct.ReqMainPacket mReqMainPacket = new PacketStruct.ReqMainPacket();
+        string jsonReqRegistMember = string.Empty;
+        string jsonReqMainPacket = string.Empty;
+
+        ID = mAccountInputField.text;
+        pwd = mPasswordInputField.text;
+
+        mReqRegistMember.account = ID;
+        mReqRegistMember.password = pwd;
+        jsonReqRegistMember = JsonUtility.ToJson(mReqRegistMember);
+
+        mReqMainPacket.cmd = PacketStruct.EnumCmd.EGS_Router_RegistMember.ToString();
+        mReqMainPacket.token = "";
+        mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
+        mReqMainPacket.payload = jsonReqRegistMember;
+        jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
+
+        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+
         yield return null;
+
+
+        //Simulate Message Box
 
         mMessageBoxButtonText.text = "Regist Member Success!!";
         mMessageBoxButton.gameObject.SetActive(true);
@@ -105,7 +130,7 @@ public class LoginView : MonoBehaviour
 
     public void OnCreateButtonClick()
     {
-        StartCoroutine(CreateButtonClick());
+        StartCoroutine(Enumerator_CreateButtonClick());
     }
 
 
