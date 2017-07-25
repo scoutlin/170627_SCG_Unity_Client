@@ -1,4 +1,5 @@
-﻿using SCG_Unity_Client_API;
+﻿using EgamingPacketStructModel;
+using SCG_Unity_Client_API;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -60,14 +61,15 @@ public class RESTFulTestView : MonoBehaviour
     public void OnHelloWorldButtonClick()
     {
         //Original
-        PacketStruct.HelloWorldPacket helloWorld = new PacketStruct.HelloWorldPacket();
+
+        PacketStructModel.HelloWorldPacket helloWorld = new PacketStructModel.HelloWorldPacket();
         helloWorld.count = 0;
         helloWorld.text = "0";
 
         string helloWorldJson = JsonUtility.ToJson(helloWorld);
 
-        PacketStruct.ReqMainPacket reqMainPacket = new PacketStruct.ReqMainPacket();
-        reqMainPacket.cmd = PacketStruct.EnumCmd.HelloWorld.ToString();
+        PacketStructModel.ReqMainPacket reqMainPacket = new PacketStructModel.ReqMainPacket();
+        reqMainPacket.cmd = PacketStructModel.EnumCmd.HelloWorld.ToString();
         reqMainPacket.payload = helloWorldJson;
 
         string reqMainPacketJson = JsonUtility.ToJson(reqMainPacket);
@@ -88,15 +90,15 @@ public class RESTFulTestView : MonoBehaviour
 
     public void OnGetServerVersionButtonClick()
     {
-        PacketStruct.ServerVersionPacket serverVersion = new PacketStruct.ServerVersionPacket();
+        PacketStructModel.ServerVersionPacket serverVersion = new PacketStructModel.ServerVersionPacket();
         serverVersion.version = "1." + bundle.ToString();
         serverVersion.bundle = bundle.ToString();
         bundle++;
 
         string serverVersionJson = JsonUtility.ToJson(serverVersion);
 
-        PacketStruct.ReqMainPacket reqMainPacket = new PacketStruct.ReqMainPacket();
-        reqMainPacket.cmd = PacketStruct.EnumCmd.PackageVersion.ToString();
+        PacketStructModel.ReqMainPacket reqMainPacket = new PacketStructModel.ReqMainPacket();
+        reqMainPacket.cmd = PacketStructModel.EnumCmd.PackageVersion.ToString();
         reqMainPacket.payload = serverVersionJson;
 
         string reqMainPacketJson = JsonUtility.ToJson(reqMainPacket);

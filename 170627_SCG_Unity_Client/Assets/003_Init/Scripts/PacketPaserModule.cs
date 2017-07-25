@@ -1,4 +1,5 @@
-﻿using SCG_Unity_Client_API;
+﻿using EgamingPacketStructModel;
+using SCG_Unity_Client_API;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,18 +26,18 @@ public class PacketPaserModule
 
     public void ProcessParser(string jsonRespMainPacket)
     {
-        bool isTokenExist = false;
-        PacketStruct.RespMainPacket mRespMainPacket;
+        //bool isTokenExist = false;
+        PacketStructModel.RespMainPacket mRespMainPacket;
         string errorMessage = string.Empty;
-        PacketStruct.EnumCmd enumCmd;
+        PacketStructModel.EnumCmd enumCmd;
         string payload = string.Empty;
         string plaintextToken = string.Empty;
         string cryptotextToken = string.Empty;
         string timeStamp = string.Empty;
 
-        mRespMainPacket = JsonUtility.FromJson<PacketStruct.RespMainPacket>(jsonRespMainPacket);
+        mRespMainPacket = JsonUtility.FromJson<PacketStructModel.RespMainPacket>(jsonRespMainPacket);
         errorMessage = mRespMainPacket.errorMessage;
-        enumCmd = (PacketStruct.EnumCmd)Enum.Parse(typeof(PacketStruct.EnumCmd), mRespMainPacket.cmd);     
+        enumCmd = (PacketStructModel.EnumCmd)Enum.Parse(typeof(PacketStructModel.EnumCmd), mRespMainPacket.cmd);     
         cryptotextToken = mRespMainPacket.token;
         timeStamp = mRespMainPacket.timeStamp;
         payload = mRespMainPacket.payload;
@@ -82,7 +83,7 @@ public class PacketPaserModule
                         }
                         break;
 
-                    case PacketStruct.EnumCmd.EGS_Router_GetRSAKey:
+                    case PacketStructModel.EnumCmd.EGS_Router_GetRSAKey:
                         {
                             Debug.Log("PacketParserModule - EGS_Router_GetRSAKey");
 
@@ -97,7 +98,7 @@ public class PacketPaserModule
                             Debug.Log("cryptTextToken receive from server use ClinetRSAPublicKey: " + cryptotextToken);
                             //Debug.Log("plainTextToken: " + plainTextToken);
 
-                            var mRespGetRSAKey = JsonUtility.FromJson<PacketStruct.EGS_Router.RespGetRSAKey>(mRespMainPacket.payload);
+                            var mRespGetRSAKey = JsonUtility.FromJson<PacketStructModel.EGS_Router.RespGetRSAKey>(mRespMainPacket.payload);
                             mRSAPublicKeyString = mRespGetRSAKey.mRSAPublicKeyString;
                             mRSAPublicKey = Cryptography.Instance.TranslateRSAKeyStringToRSAKey(mRSAPublicKeyString);
                             Cryptography.Instance.SetRSAPublicKey("server", mRSAPublicKey);
@@ -107,13 +108,13 @@ public class PacketPaserModule
                         }
                         break;
 
-                    case PacketStruct.EnumCmd.EGS_Router_GetAESKey:
+                    case PacketStructModel.EnumCmd.EGS_Router_GetAESKey:
                         {
                             Debug.Log("PacketParserModule - EGS_Router_GetToken");
 
                             //Get AES Key, IV Decrypt if and save
-                            PacketStruct.EGS_Router.RespGetAESKey mRespGetAESKey = new PacketStruct.EGS_Router.RespGetAESKey();
-                            mRespGetAESKey = JsonUtility.FromJson<PacketStruct.EGS_Router.RespGetAESKey>(payload);
+                            PacketStructModel.EGS_Router.RespGetAESKey mRespGetAESKey = new PacketStructModel.EGS_Router.RespGetAESKey();
+                            mRespGetAESKey = JsonUtility.FromJson<PacketStructModel.EGS_Router.RespGetAESKey>(payload);
                             string encryptAESKey = mRespGetAESKey.mAESKey;
                             string encryptAESIV = mRespGetAESKey.mAESIV;
                             string plainAESKey = Cryptography.Instance.RSADecrypt(encryptAESKey);
@@ -154,23 +155,86 @@ public class PacketPaserModule
                         }
                         break;
 
-                    case PacketStruct.EnumCmd.EGS_Router_RegistMember:
+
+
+                    case PacketStructModel.EnumCmd.EGS_Router_AdminRegist:
+                        {
+                            PacketStructModel.EGS_Router.RespAdminRegist mRespAdminRegist = new PacketStructModel.EGS_Router.RespAdminRegist();
+                            mRespAdminRegist = JsonUtility.FromJson<PacketStructModel.EGS_Router.RespAdminRegist>(payload);
+
+                            //Debug.Log("respAccount: " + mRespRegistMember.respAccount);
+                            RegistTable.Instance.mView.mLoginView.TestText.text += mRespAdminRegist.isSucess.ToString();
+                            RegistTable.CommonDate.Flags.reqRegistMemberComplete = true;
+                        }
+                        break;
+
+                    case PacketStructModel.EnumCmd.EGS_Router_AdminEdit:
+                        {
+
+                        }
+                        break;
+
+                    case PacketStructModel.EnumCmd.EGS_Router_AdminDelete:
+                        {
+
+                        }
+                        break;
+
+                    case PacketStructModel.EnumCmd.EGS_Router_AdminLogin:
+                        {
+
+                        }
+                        break;
+
+                    case PacketStructModel.EnumCmd.EGS_Router_AdminLogout:
+                        {
+
+                        }
+                        break;
+
+
+
+                    case PacketStructModel.EnumCmd.EGS_Router_MemberRegist:
                         {
                             //Debug.Log("PacketParserModule - EGS_Router_GetToken");
 
-                            PacketStruct.EGS_Router.RespRegistMember mRespRegistMember = new PacketStruct.EGS_Router.RespRegistMember();
-                            mRespRegistMember = JsonUtility.FromJson<PacketStruct.EGS_Router.RespRegistMember>(payload);
+                            PacketStructModel.EGS_Router.RespMemberRegist mRespMemberRegist = new PacketStructModel.EGS_Router.RespMemberRegist();
+                            mRespMemberRegist = JsonUtility.FromJson<PacketStructModel.EGS_Router.RespMemberRegist>(payload);
 
                             //Debug.Log("respAccount: " + mRespRegistMember.respAccount);
-                            RegistTable.Instance.mView.mLoginView.TestText.text += mRespRegistMember.respAccount;
+                            RegistTable.Instance.mView.mLoginView.TestText.text += mRespMemberRegist.isSuccess.ToString();
                             RegistTable.CommonDate.Flags.reqRegistMemberComplete = true;
+                        }
+                        break;
+
+                    case PacketStructModel.EnumCmd.EGS_Router_MemberEdit:
+                        {
+
+                        }
+                        break;
+
+                    case PacketStructModel.EnumCmd.EGS_Router_MemberDelete:
+                        {
+
+                        }
+                        break;
+
+                    case PacketStructModel.EnumCmd.EGS_Router_MemberLogin:
+                        {
+
+                        }
+                        break;
+
+                    case PacketStructModel.EnumCmd.EGS_Router_MemberLogout:
+                        {
+
                         }
                         break;
                 }
             }
             else
             {
-                throw new Exception("Token Identify Fail!!");
+                //throw new Exception("Token Identify Fail!!");
             }
         }
     }

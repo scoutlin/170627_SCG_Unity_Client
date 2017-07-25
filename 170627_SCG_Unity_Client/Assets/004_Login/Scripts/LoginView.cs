@@ -1,4 +1,5 @@
-﻿using SCG_Unity_Client_API;
+﻿using EgamingPacketStructModel;
+using SCG_Unity_Client_API;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,16 +18,16 @@ public class LoginView : MonoBehaviour
     public Text TestText;
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         RegistTable.Instance.mView.mLoginView = this;
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    }
+
+    // Update is called once per frame
+    void Update()
     {
-		
-	}
+        
+    }
 
 
     public IEnumerator Enumerator_CreateButtonClick()
@@ -96,19 +97,19 @@ public class LoginView : MonoBehaviour
 
         string ID = string.Empty;
         string pwd = string.Empty;
-        PacketStruct.EGS_Router.ReqRegistMember mReqRegistMember = new PacketStruct.EGS_Router.ReqRegistMember();
-        PacketStruct.ReqMainPacket mReqMainPacket = new PacketStruct.ReqMainPacket();
+        PacketStructModel.EGS_Router.ReqMemberRegist mReqMemberRegist = new PacketStructModel.EGS_Router.ReqMemberRegist();
+        PacketStructModel.ReqMainPacket mReqMainPacket = new PacketStructModel.ReqMainPacket();
         string jsonReqRegistMember = string.Empty;
         string jsonReqMainPacket = string.Empty;
 
         ID = mAccountInputField.text;
         pwd = mPasswordInputField.text;
 
-        mReqRegistMember.account = ID;
-        mReqRegistMember.password = pwd;
-        jsonReqRegistMember = JsonUtility.ToJson(mReqRegistMember);
+        mReqMemberRegist.account = ID;
+        mReqMemberRegist.password = pwd;
+        jsonReqRegistMember = JsonUtility.ToJson(mReqMemberRegist);
 
-        mReqMainPacket.cmd = PacketStruct.EnumCmd.EGS_Router_RegistMember.ToString();
+        mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_MemberRegist.ToString();
         mReqMainPacket.token = "";
         mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
         mReqMainPacket.payload = jsonReqRegistMember;
@@ -193,12 +194,12 @@ public class LoginView : MonoBehaviour
 
         for (int i = 0; i < 1000; i++)
         {
-            PacketStruct.EGS_Router.ReqRegistMember mReqRegistMember = new PacketStruct.EGS_Router.ReqRegistMember();
-            mReqRegistMember.account = "3";
-            var jsonReqRegistMember = JsonUtility.ToJson(mReqRegistMember);
+            PacketStructModel.EGS_Router.ReqMemberRegist mReqMemberRegist = new PacketStructModel.EGS_Router.ReqMemberRegist();
+            mReqMemberRegist.account = "3";
+            var jsonReqRegistMember = JsonUtility.ToJson(mReqMemberRegist);
 
-            PacketStruct.ReqMainPacket mReqMainPacket = new PacketStruct.ReqMainPacket();
-            mReqMainPacket.cmd = PacketStruct.EnumCmd.EGS_Router_RegistMember.ToString();
+            PacketStructModel.ReqMainPacket mReqMainPacket = new PacketStructModel.ReqMainPacket();
+            mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_MemberRegist.ToString();
             mReqMainPacket.payload = jsonReqRegistMember;
             var jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
@@ -208,4 +209,75 @@ public class LoginView : MonoBehaviour
 
         yield return null;
     }
+
+
+
+
+    #region Test
+    public void OnAdminRegistButtonClicked()
+    {
+        PacketStructModel.EGS_Router.ReqMemberRegist mReqMemberRegist = new PacketStructModel.EGS_Router.ReqMemberRegist();
+        mReqMemberRegist.account = mAccountInputField.text;
+        mReqMemberRegist.password = mPasswordInputField.text;
+        string jsonReqMemberRegist = JsonUtility.ToJson(mReqMemberRegist);
+
+        PacketStructModel.ReqMainPacket mReqMainPacket = new PacketStructModel.ReqMainPacket();
+        mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_AdminRegist.ToString();
+        mReqMainPacket.token = "yeah";
+        mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
+        mReqMainPacket.payload = jsonReqMemberRegist;
+        string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
+
+        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+    }
+    public void OnAdminEditButtonClicked()
+    {
+
+    }
+    public void OnAdminDeleteButtonClicked()
+    {
+
+    }
+    public void OnAdminLoginButtonClicked()
+    {
+        PacketStructModel.EGS_Router.ReqAdminLogin mReqAdminLogin = new PacketStructModel.EGS_Router.ReqAdminLogin();
+        mReqAdminLogin.account = mAccountInputField.text;
+        mReqAdminLogin.password = mPasswordInputField.text;
+        string jsonReqMemberRegist = JsonUtility.ToJson(mReqAdminLogin);
+
+        PacketStructModel.ReqMainPacket mReqMainPacket = new PacketStructModel.ReqMainPacket();
+        mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_AdminLogin.ToString();
+        mReqMainPacket.token = string.Empty;
+        mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
+        mReqMainPacket.payload = jsonReqMemberRegist;
+        string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
+
+        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+    }
+    public void OnAdminLogoutButtonClicked()
+    {
+
+    }
+
+    public void OnMemberRegistButtonClicked()
+    {
+
+    }
+    public void OnMemberEditButtonClicked()
+    {
+
+    }
+    public void OnMemberDeleteButtonClicked()
+    {
+
+    }
+    public void OnMemberLoginButtonClicked()
+    {
+
+    }
+    public void OnMemberLogoutButtonClicked()
+    {
+
+    }
+    #endregion
 }

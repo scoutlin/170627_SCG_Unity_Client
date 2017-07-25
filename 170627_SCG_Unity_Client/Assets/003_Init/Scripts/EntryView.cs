@@ -1,4 +1,5 @@
-﻿using SCG_Unity_Client_API;
+﻿using EgamingPacketStructModel;
+using SCG_Unity_Client_API;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,8 +48,8 @@ public class EntryView : MonoBehaviour {
             string mRSAPublicKeyString = string.Empty;
             string jsonReqGetKey = string.Empty;
             string jsonReqMainPacket = string.Empty;
-            PacketStruct.ReqMainPacket mReqMainPacket = null;
-            PacketStruct.EGS_Router.ReqGetRSAKey mReqGetKey = null;
+            PacketStructModel.ReqMainPacket mReqMainPacket = null;
+            PacketStructModel.EGS_Router.ReqGetRSAKey mReqGetKey = null;
 
             Debug.Log("Create RSA Start - DateTime: " + DateTime.Now.ToString());
             Console.WriteLine("Create RSA Start - DateTime: " + DateTime.Now.ToString());
@@ -65,14 +66,14 @@ public class EntryView : MonoBehaviour {
             mRSAPublicKey = Cryptography.Instance.GetRSAPublicKey("local");
             mRSAPublicKeyString = Cryptography.Instance.TranslateRSAKeyToRSAKeyString(mRSAPublicKey);
 
-            mReqGetKey = new PacketStruct.EGS_Router.ReqGetRSAKey();
+            mReqGetKey = new PacketStructModel.EGS_Router.ReqGetRSAKey();
             mReqGetKey.mRSAPublicKeyString = mRSAPublicKeyString;
             jsonReqGetKey = JsonUtility.ToJson(mReqGetKey);
 
             //MainPacket
             //string stringGuid = Guid.NewGuid().ToString();
-            mReqMainPacket = new PacketStruct.ReqMainPacket();
-            mReqMainPacket.cmd = PacketStruct.EnumCmd.EGS_Router_GetRSAKey.ToString();
+            mReqMainPacket = new PacketStructModel.ReqMainPacket();
+            mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_GetRSAKey.ToString();
             mReqMainPacket.token = string.Empty;
             mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
             mReqMainPacket.payload = jsonReqGetKey;
@@ -99,8 +100,8 @@ public class EntryView : MonoBehaviour {
             encryptTextToken = Cryptography.Instance.RSAEncrypt(mRSAPublicKey, plaintextToken);
             Debug.Log("cryptTextToken send to server use ServerRSAPublicKey: " + encryptTextToken);
 
-            mReqMainPacket = new PacketStruct.ReqMainPacket();
-            mReqMainPacket.cmd = PacketStruct.EnumCmd.EGS_Router_GetAESKey.ToString();
+            mReqMainPacket = new PacketStructModel.ReqMainPacket();
+            mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_GetAESKey.ToString();
             mReqMainPacket.token = encryptTextToken;
             mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
             mReqMainPacket.payload = string.Empty;
