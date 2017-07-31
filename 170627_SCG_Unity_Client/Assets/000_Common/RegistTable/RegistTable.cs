@@ -12,12 +12,24 @@ public class RegistTable
 
             public static bool reqRSAKeyComplete = false;
             public static bool reqAESKeyComplete = false;
-            public static bool reqRegistMemberComplete = false;
+
+            public static bool reqAdminRegistComplete = false;
+            public static bool reqAdminEditComplete = false;
+            public static bool reqAdminDeleteComplete = false;
+            public static bool reqAdminLoginComplete = false;
+            public static bool reqAdminLogoutComplete = false;
+
+            public static bool reqMemberRegistComplete = false;
+            public static bool reqMemberEditComplete = false;
+            public static bool reqMemberDeleteComplete = false;
+            public static bool reqMemberLoginComplete = false;
+            public static bool reqMemberLogoutComplete = false;
         }
 
         public class Variables
         {
-            
+            public static string adminToken = string.Empty;
+            public static string memberToken = string.Empty;
         }
     }
 

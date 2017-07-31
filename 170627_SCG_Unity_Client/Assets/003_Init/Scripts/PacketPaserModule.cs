@@ -50,7 +50,9 @@ public class PacketPaserModule
 
         if (mRespMainPacket.errorMessage != string.Empty)
         {
-            throw new Exception("RespMainPacket Error!!");
+            //throw new Exception("RespMainPacket Error!!");
+
+            RegistTable.Instance.mView.mLoginView.TestText.text = "RespMainPacket Error!!: " + mRespMainPacket.errorMessage;
         }
         else
         {
@@ -159,36 +161,53 @@ public class PacketPaserModule
 
                     case PacketStructModel.EnumCmd.EGS_Router_AdminRegist:
                         {
-                            PacketStructModel.EGS_Router.RespAdminRegist mRespAdminRegist = new PacketStructModel.EGS_Router.RespAdminRegist();
+                            RegistTable.CommonDate.Flags.reqAdminRegistComplete = false;
+
+                            PacketStructModel.EGS_Router.RespAdminRegist mRespAdminRegist = null;
                             mRespAdminRegist = JsonUtility.FromJson<PacketStructModel.EGS_Router.RespAdminRegist>(payload);
 
                             //Debug.Log("respAccount: " + mRespRegistMember.respAccount);
-                            RegistTable.Instance.mView.mLoginView.TestText.text += mRespAdminRegist.isSucess.ToString();
-                            RegistTable.CommonDate.Flags.reqRegistMemberComplete = true;
+                            RegistTable.Instance.mView.mLoginView.TestText.text = "EGS_Router_AdminRegist - isSucess :" + mRespAdminRegist.isSuccess.ToString();
+
+                            RegistTable.CommonDate.Flags.reqAdminRegistComplete = true;
                         }
                         break;
 
                     case PacketStructModel.EnumCmd.EGS_Router_AdminEdit:
                         {
+                            RegistTable.CommonDate.Flags.reqAdminEditComplete = false;
 
+                            PacketStructModel.EGS_Router.RespAdminEdit mRespAdminEdit = new PacketStructModel.EGS_Router.RespAdminEdit();
+                            mRespAdminEdit = JsonUtility.FromJson<PacketStructModel.EGS_Router.RespAdminEdit>(payload);
+
+                            //Debug.Log("respAccount: " + mRespRegistMember.respAccount);
+                            RegistTable.Instance.mView.mLoginView.TestText.text += mRespAdminEdit.password.ToString();
+
+                            RegistTable.CommonDate.Flags.reqAdminEditComplete = true;
                         }
                         break;
 
                     case PacketStructModel.EnumCmd.EGS_Router_AdminDelete:
                         {
+                            RegistTable.CommonDate.Flags.reqAdminDeleteComplete = false;
 
+                            RegistTable.CommonDate.Flags.reqAdminDeleteComplete = true;
                         }
                         break;
 
                     case PacketStructModel.EnumCmd.EGS_Router_AdminLogin:
                         {
+                            RegistTable.CommonDate.Flags.reqAdminLoginComplete = false;
 
+                            RegistTable.CommonDate.Flags.reqAdminLoginComplete = true;
                         }
                         break;
 
                     case PacketStructModel.EnumCmd.EGS_Router_AdminLogout:
                         {
+                            RegistTable.CommonDate.Flags.reqAdminLogoutComplete = false;
 
+                            RegistTable.CommonDate.Flags.reqAdminLoginComplete = true;
                         }
                         break;
 
@@ -196,6 +215,7 @@ public class PacketPaserModule
 
                     case PacketStructModel.EnumCmd.EGS_Router_MemberRegist:
                         {
+                            RegistTable.CommonDate.Flags.reqMemberRegistComplete = false;
                             //Debug.Log("PacketParserModule - EGS_Router_GetToken");
 
                             PacketStructModel.EGS_Router.RespMemberRegist mRespMemberRegist = new PacketStructModel.EGS_Router.RespMemberRegist();
@@ -203,31 +223,39 @@ public class PacketPaserModule
 
                             //Debug.Log("respAccount: " + mRespRegistMember.respAccount);
                             RegistTable.Instance.mView.mLoginView.TestText.text += mRespMemberRegist.isSuccess.ToString();
-                            RegistTable.CommonDate.Flags.reqRegistMemberComplete = true;
+                            RegistTable.CommonDate.Flags.reqMemberRegistComplete = true;
                         }
                         break;
 
                     case PacketStructModel.EnumCmd.EGS_Router_MemberEdit:
                         {
+                            RegistTable.CommonDate.Flags.reqMemberEditComplete = false;
 
+                            RegistTable.CommonDate.Flags.reqMemberEditComplete = true;
                         }
                         break;
 
                     case PacketStructModel.EnumCmd.EGS_Router_MemberDelete:
                         {
+                            RegistTable.CommonDate.Flags.reqMemberDeleteComplete = false;
 
+                            RegistTable.CommonDate.Flags.reqMemberDeleteComplete = true;
                         }
                         break;
 
                     case PacketStructModel.EnumCmd.EGS_Router_MemberLogin:
                         {
+                            RegistTable.CommonDate.Flags.reqMemberLoginComplete = false;
 
+                            RegistTable.CommonDate.Flags.reqMemberLoginComplete = true;
                         }
                         break;
 
                     case PacketStructModel.EnumCmd.EGS_Router_MemberLogout:
                         {
+                            RegistTable.CommonDate.Flags.reqMemberLogoutComplete = false;
 
+                            RegistTable.CommonDate.Flags.reqMemberLogoutComplete = true;
                         }
                         break;
                 }
