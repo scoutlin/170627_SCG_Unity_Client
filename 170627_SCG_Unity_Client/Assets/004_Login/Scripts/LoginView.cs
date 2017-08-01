@@ -270,7 +270,7 @@ public class LoginView : MonoBehaviour
 
         PacketStructModel.ReqMainPacket mReqMainPacket = new PacketStructModel.ReqMainPacket();
         mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_AdminLogin.ToString();
-        mReqMainPacket.token = RegistTable.CommonDate.Variables.adminToken;
+        mReqMainPacket.token = string.Empty;
         mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
         mReqMainPacket.payload = jsonReqAdminLogin;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
@@ -280,11 +280,10 @@ public class LoginView : MonoBehaviour
     public void OnAdminLogoutButtonClicked()
     {
         PacketStructModel.EGS_Router.ReqAdminLogout mReqAdminLogout = new PacketStructModel.EGS_Router.ReqAdminLogout();
-        mReqAdminLogout.token = RegistTable.CommonDate.Variables.adminToken;
         string jsonReqAdminLogout = JsonUtility.ToJson(mReqAdminLogout);
 
         PacketStructModel.ReqMainPacket mReqMainPacket = new PacketStructModel.ReqMainPacket();
-        mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_AdminLogin.ToString();
+        mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_AdminLogout.ToString();
         mReqMainPacket.token = RegistTable.CommonDate.Variables.adminToken;
         mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
         mReqMainPacket.payload = jsonReqAdminLogout;

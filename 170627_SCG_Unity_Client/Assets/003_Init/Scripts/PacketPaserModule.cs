@@ -36,7 +36,14 @@ public class PacketPaserModule
         string timeStamp = string.Empty;
 
         mRespMainPacket = JsonUtility.FromJson<PacketStructModel.RespMainPacket>(jsonRespMainPacket);
-        errorMessage = mRespMainPacket.errorMessage;
+        try
+        {
+            errorMessage = mRespMainPacket.errorMessage;
+        }
+        catch(Exception ex)
+        {
+            RegistTable.Instance.mView.mLoginView.TestText.text = ex.ToString();
+        }
         enumCmd = (PacketStructModel.EnumCmd)Enum.Parse(typeof(PacketStructModel.EnumCmd), mRespMainPacket.cmd);     
         cryptotextToken = mRespMainPacket.token;
         timeStamp = mRespMainPacket.timeStamp;
@@ -199,6 +206,14 @@ public class PacketPaserModule
                         {
                             RegistTable.CommonDate.Flags.reqAdminLoginComplete = false;
 
+                            PacketStructModel.EGS_Router.RespAdminLogin mRespAdminLogin = null;
+                            mRespAdminLogin = JsonUtility.FromJson<PacketStructModel.EGS_Router.RespAdminLogin>(payload);
+
+                            RegistTable.CommonDate.Variables.adminToken = mRespAdminLogin.token;
+
+                            RegistTable.Instance.mView.mLoginView.TestText.text = "EGS_Router_AdminLogin - account :" + mRespAdminLogin.account + "\n";
+                            RegistTable.Instance.mView.mLoginView.TestText.text += "EGS_Router_AdminLogin - token :" + mRespAdminLogin.token + "\n";
+
                             RegistTable.CommonDate.Flags.reqAdminLoginComplete = true;
                         }
                         break;
@@ -206,6 +221,13 @@ public class PacketPaserModule
                     case PacketStructModel.EnumCmd.EGS_Router_AdminLogout:
                         {
                             RegistTable.CommonDate.Flags.reqAdminLogoutComplete = false;
+
+                            PacketStructModel.EGS_Router.RespAdminLogout mRespAdminLogout = null;
+                            mRespAdminLogout = JsonUtility.FromJson<PacketStructModel.EGS_Router.RespAdminLogout>(payload);
+
+                            RegistTable.CommonDate.Variables.adminToken = string.Empty;
+
+                            RegistTable.Instance.mView.mLoginView.TestText.text = "EGS_Router_AdminLogout - isSuccess :" + mRespAdminLogout.isSuccess + "\n";
 
                             RegistTable.CommonDate.Flags.reqAdminLoginComplete = true;
                         }
