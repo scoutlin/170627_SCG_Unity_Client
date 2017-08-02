@@ -232,7 +232,7 @@ public class LoginView : MonoBehaviour
     public void OnAdminEditButtonClicked()
     {
         PacketStructModel.EGS_Router.ReqAdminEdit mReqAdminEdit = new PacketStructModel.EGS_Router.ReqAdminEdit();
-        mReqAdminEdit.account = string.Empty;
+        mReqAdminEdit.account = mAccountInputField.text;
         mReqAdminEdit.password = mPasswordInputField.text;
         string jsonReqAdminEdit = JsonUtility.ToJson(mReqAdminEdit);
 
@@ -294,11 +294,35 @@ public class LoginView : MonoBehaviour
 
     public void OnMemberRegistButtonClicked()
     {
+        PacketStructModel.EGS_Router.ReqMemberRegist mReqMemberRegist = new PacketStructModel.EGS_Router.ReqMemberRegist();
+        mReqMemberRegist.account = mAccountInputField.text;
+        mReqMemberRegist.password = mPasswordInputField.text;
+        string jsonReqMemberRegist = JsonUtility.ToJson(mReqMemberRegist);
 
+        PacketStructModel.ReqMainPacket mReqMainPacket = new PacketStructModel.ReqMainPacket();
+        mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_MemberRegist.ToString();
+        mReqMainPacket.token = RegistTable.CommonDate.Variables.adminToken;
+        mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
+        mReqMainPacket.payload = jsonReqMemberRegist;
+        string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
+
+        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
     }
     public void OnMemberEditButtonClicked()
     {
+        PacketStructModel.EGS_Router.ReqMemberEdit mReqMemberEdit = new PacketStructModel.EGS_Router.ReqMemberEdit();
+        mReqMemberEdit.account = mAccountInputField.text;
+        mReqMemberEdit.password = mPasswordInputField.text;
+        string jsonReqMemberEdit = JsonUtility.ToJson(mReqMemberEdit);
 
+        PacketStructModel.ReqMainPacket mReqMainPacket = new PacketStructModel.ReqMainPacket();
+        mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_MemberEdit.ToString();
+        mReqMainPacket.token = RegistTable.CommonDate.Variables.adminToken;
+        mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
+        mReqMainPacket.payload = jsonReqMemberEdit;
+        string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
+
+        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
     }
     public void OnMemberDeleteButtonClicked()
     {
@@ -306,11 +330,34 @@ public class LoginView : MonoBehaviour
     }
     public void OnMemberLoginButtonClicked()
     {
+        PacketStructModel.EGS_Router.ReqMemberLogIn mReqMemberLogIn = new PacketStructModel.EGS_Router.ReqMemberLogIn();
+        mReqMemberLogIn.account = mAccountInputField.text;
+        mReqMemberLogIn.password = mPasswordInputField.text;
+        mReqMemberLogIn.cash = 9478;
+        string jsonReqMemberLogIn = JsonUtility.ToJson(mReqMemberLogIn);
 
+        PacketStructModel.ReqMainPacket mReqMainPacket = new PacketStructModel.ReqMainPacket();
+        mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_MemberLogin.ToString();
+        mReqMainPacket.token = RegistTable.CommonDate.Variables.adminToken;
+        mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
+        mReqMainPacket.payload = jsonReqMemberLogIn;
+        string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
+
+        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
     }
     public void OnMemberLogoutButtonClicked()
     {
+        PacketStructModel.EGS_Router.ReqMemberLogOut mReqMemberLogOut = new PacketStructModel.EGS_Router.ReqMemberLogOut();
+        string jsonReqMemberLogOut = JsonUtility.ToJson(mReqMemberLogOut);
 
+        PacketStructModel.ReqMainPacket mReqMainPacket = new PacketStructModel.ReqMainPacket();
+        mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_MemberLogout.ToString();
+        mReqMainPacket.token = RegistTable.CommonDate.Variables.memberToken;
+        mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
+        mReqMainPacket.payload = jsonReqMemberLogOut;
+        string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
+
+        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
     }
     #endregion
 }

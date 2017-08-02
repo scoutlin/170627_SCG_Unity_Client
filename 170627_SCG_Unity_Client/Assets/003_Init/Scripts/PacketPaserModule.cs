@@ -188,7 +188,7 @@ public class PacketPaserModule
                             mRespAdminEdit = JsonUtility.FromJson<PacketStructModel.EGS_Router.RespAdminEdit>(payload);
 
                             //Debug.Log("respAccount: " + mRespRegistMember.respAccount);
-                            RegistTable.Instance.mView.mLoginView.TestText.text += mRespAdminEdit.password.ToString();
+                            RegistTable.Instance.mView.mLoginView.TestText.text = mRespAdminEdit.account + "@" + mRespAdminEdit.password.ToString();
 
                             RegistTable.CommonDate.Flags.reqAdminEditComplete = true;
                         }
@@ -244,7 +244,7 @@ public class PacketPaserModule
                             mRespMemberRegist = JsonUtility.FromJson<PacketStructModel.EGS_Router.RespMemberRegist>(payload);
 
                             //Debug.Log("respAccount: " + mRespRegistMember.respAccount);
-                            RegistTable.Instance.mView.mLoginView.TestText.text += mRespMemberRegist.isSuccess.ToString();
+                            RegistTable.Instance.mView.mLoginView.TestText.text = "Success";
                             RegistTable.CommonDate.Flags.reqMemberRegistComplete = true;
                         }
                         break;
@@ -252,6 +252,13 @@ public class PacketPaserModule
                     case PacketStructModel.EnumCmd.EGS_Router_MemberEdit:
                         {
                             RegistTable.CommonDate.Flags.reqMemberEditComplete = false;
+                            //Debug.Log("PacketParserModule - EGS_Router_GetToken");
+
+                            PacketStructModel.EGS_Router.RespMemberEdit mRespMemberEdit = new PacketStructModel.EGS_Router.RespMemberEdit();
+                            mRespMemberEdit = JsonUtility.FromJson<PacketStructModel.EGS_Router.RespMemberEdit>(payload);
+
+                            //Debug.Log("respAccount: " + mRespRegistMember.respAccount);
+                            RegistTable.Instance.mView.mLoginView.TestText.text = "Success";
 
                             RegistTable.CommonDate.Flags.reqMemberEditComplete = true;
                         }
@@ -268,6 +275,14 @@ public class PacketPaserModule
                     case PacketStructModel.EnumCmd.EGS_Router_MemberLogin:
                         {
                             RegistTable.CommonDate.Flags.reqMemberLoginComplete = false;
+                            //Debug.Log("PacketParserModule - EGS_Router_GetToken");
+
+                            PacketStructModel.EGS_Router.RespMemberLogIn mRespMemberLogIn = new PacketStructModel.EGS_Router.RespMemberLogIn();
+                            mRespMemberLogIn = JsonUtility.FromJson<PacketStructModel.EGS_Router.RespMemberLogIn>(payload);
+
+                            //Debug.Log("respAccount: " + mRespRegistMember.respAccount);
+                            RegistTable.CommonDate.Variables.memberToken = mRespMemberLogIn.token;
+                            RegistTable.Instance.mView.mLoginView.TestText.text = "token: " + mRespMemberLogIn.token + "/cash: " + mRespMemberLogIn.cash;
 
                             RegistTable.CommonDate.Flags.reqMemberLoginComplete = true;
                         }
@@ -276,6 +291,14 @@ public class PacketPaserModule
                     case PacketStructModel.EnumCmd.EGS_Router_MemberLogout:
                         {
                             RegistTable.CommonDate.Flags.reqMemberLogoutComplete = false;
+                            //Debug.Log("PacketParserModule - EGS_Router_GetToken");
+
+                            PacketStructModel.EGS_Router.RespMemberLogOut mRespMemberLogOut = new PacketStructModel.EGS_Router.RespMemberLogOut();
+                            mRespMemberLogOut = JsonUtility.FromJson<PacketStructModel.EGS_Router.RespMemberLogOut>(payload);
+
+                            //Debug.Log("respAccount: " + mRespRegistMember.respAccount);
+                            RegistTable.CommonDate.Variables.memberToken = string.Empty;
+                            RegistTable.Instance.mView.mLoginView.TestText.text = "cash: " + mRespMemberLogOut.cash;
 
                             RegistTable.CommonDate.Flags.reqMemberLogoutComplete = true;
                         }
