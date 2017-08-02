@@ -348,11 +348,12 @@ public class LoginView : MonoBehaviour
     public void OnMemberLogoutButtonClicked()
     {
         PacketStructModel.EGS_Router.ReqMemberLogOut mReqMemberLogOut = new PacketStructModel.EGS_Router.ReqMemberLogOut();
+        mReqMemberLogOut.token = RegistTable.CommonDate.Variables.memberToken;
         string jsonReqMemberLogOut = JsonUtility.ToJson(mReqMemberLogOut);
 
         PacketStructModel.ReqMainPacket mReqMainPacket = new PacketStructModel.ReqMainPacket();
         mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_MemberLogout.ToString();
-        mReqMainPacket.token = RegistTable.CommonDate.Variables.memberToken;
+        mReqMainPacket.token = RegistTable.CommonDate.Variables.adminToken;
         mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
         mReqMainPacket.payload = jsonReqMemberLogOut;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
