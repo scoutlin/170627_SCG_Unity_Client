@@ -12,10 +12,13 @@ public class LoginView : MonoBehaviour
 {
     public InputField mAccountInputField;
     public InputField mPasswordInputField;
+    public InputField mIP_InputField;
     public Button mMessageBoxButton;
     public Text mMessageBoxButtonText;
 
     public Text TestText;
+
+    private string serverIP;
 
     // Use this for initialization
     void Start()
@@ -26,7 +29,7 @@ public class LoginView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        serverIP = mIP_InputField.text;
     }
 
 
@@ -80,10 +83,10 @@ public class LoginView : MonoBehaviour
         //jsonMainReqPacket = JsonUtility.ToJson(mReqMainPacket);
 
         //Debug.Log("Start RESTFul: " + "\n" +
-        //          "url: " + "http://localhost:3000/egs-router/" + "\n" +
+        //          "url: " + "http://" + serverIP + ":3000/egs-router/" + "\n" +
         //          "json: " + jsonMainReqPacket);
 
-        //NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonMainReqPacket);
+        //NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonMainReqPacket);
         ////-----------------------------------------------------------------------------------------------
 
         //while (RegistTable.CommonDate.Flags.reqRegistMemberComplete == false)
@@ -115,7 +118,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqRegistMember;
         jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
 
         yield return null;
 
@@ -203,7 +206,7 @@ public class LoginView : MonoBehaviour
             mReqMainPacket.payload = jsonReqRegistMember;
             var jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-            NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+            NetAPIModel.Instance.Send("http://" + serverIP + "/egs-router/", jsonReqMainPacket);
         }
 
         yield return null;
@@ -227,7 +230,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqAdminRegist;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
     }
     public void OnAdminEditButtonClicked()
     {
@@ -243,7 +246,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqAdminEdit;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
     }
     public void OnAdminDeleteButtonClicked()
     {
@@ -259,7 +262,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqAdminDelete;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
     }
     public void OnAdminLoginButtonClicked()
     {
@@ -275,7 +278,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqAdminLogin;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
     }
     public void OnAdminLogoutButtonClicked()
     {
@@ -289,7 +292,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqAdminLogout;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
     }
 
     public void OnMemberRegistButtonClicked()
@@ -306,7 +309,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqMemberRegist;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
     }
     public void OnMemberEditButtonClicked()
     {
@@ -322,7 +325,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqMemberEdit;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
     }
     public void OnMemberDeleteButtonClicked()
     {
@@ -343,7 +346,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqMemberLogIn;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
     }
     public void OnMemberLogoutButtonClicked()
     {
@@ -358,7 +361,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqMemberLogOut;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
     }
     #endregion
 }
