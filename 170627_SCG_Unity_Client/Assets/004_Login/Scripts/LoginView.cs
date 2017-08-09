@@ -3,6 +3,8 @@ using SCG_Unity_Client_API;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
@@ -10,6 +12,7 @@ using UnityEngine.UI;
 
 public class LoginView : MonoBehaviour
 {
+    public Toggle mIfUseHttpsToggle;
     public InputField mAccountInputField;
     public InputField mPasswordInputField;
     public InputField mIP_InputField;
@@ -19,11 +22,20 @@ public class LoginView : MonoBehaviour
     public Text TestText;
 
     private string serverIP;
+    private string serverPort;
+    private NetAPIModel.Enum_HttpType enum_HttpType = new NetAPIModel.Enum_HttpType();
+
 
     // Use this for initialization
     void Start()
     {
         RegistTable.Instance.mView.mLoginView = this;
+        NetAPIModel.Instance.ForceTrustCertificateForHttp2();
+        
+        //Server Init
+        enum_HttpType = NetAPIModel.Enum_HttpType.https;
+        serverPort = "9478";
+        serverIP = "localhost";
     }
 
     // Update is called once per frame
@@ -32,6 +44,21 @@ public class LoginView : MonoBehaviour
         serverIP = mIP_InputField.text;
     }
 
+    public void OnIfUseHttpsToggleClick()
+    {
+        if (mIfUseHttpsToggle.isOn == true)
+        {
+            Debug.Log(mIfUseHttpsToggle.isOn.ToString());
+            enum_HttpType = NetAPIModel.Enum_HttpType.https;
+            serverPort = "9478";
+        }
+        else
+        {
+            Debug.Log(mIfUseHttpsToggle.isOn.ToString());
+            enum_HttpType = NetAPIModel.Enum_HttpType.http;
+            serverPort = "3000";
+        }
+    }
 
     public IEnumerator Enumerator_CreateButtonClick()
     {
@@ -118,7 +145,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqRegistMember;
         jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send(enum_HttpType, serverIP + ":" + serverPort + "/ egs-router/", jsonReqMainPacket);
 
         yield return null;
 
@@ -206,7 +233,7 @@ public class LoginView : MonoBehaviour
             mReqMainPacket.payload = jsonReqRegistMember;
             var jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-            NetAPIModel.Instance.Send("http://" + serverIP + "/egs-router/", jsonReqMainPacket);
+            NetAPIModel.Instance.Send(enum_HttpType, serverIP + ":" + serverPort + "/egs-router/", jsonReqMainPacket);
         }
 
         yield return null;
@@ -230,7 +257,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqAdminRegist;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send(enum_HttpType, serverIP + ":" + serverPort + "/egs-router/", jsonReqMainPacket);
     }
     public void OnAdminEditButtonClicked()
     {
@@ -246,7 +273,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqAdminEdit;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send(enum_HttpType, serverIP + ":" + serverPort + "/egs-router/", jsonReqMainPacket);
     }
     public void OnAdminDeleteButtonClicked()
     {
@@ -262,7 +289,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqAdminDelete;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send(enum_HttpType, serverIP + ":" + serverPort + "/", jsonReqMainPacket);
     }
     public void OnAdminLoginButtonClicked()
     {
@@ -278,7 +305,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqAdminLogin;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send(enum_HttpType, serverIP + ":" + serverPort + "/egs-router/", jsonReqMainPacket);
     }
     public void OnAdminLogoutButtonClicked()
     {
@@ -292,7 +319,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqAdminLogout;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send(enum_HttpType, serverIP + ":" + serverPort + "/egs-router/", jsonReqMainPacket);
     }
 
     public void OnMemberRegistButtonClicked()
@@ -309,7 +336,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqMemberRegist;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send(enum_HttpType, serverIP + ":" + serverPort + "/egs-router/", jsonReqMainPacket);
     }
     public void OnMemberEditButtonClicked()
     {
@@ -325,7 +352,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqMemberEdit;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send(enum_HttpType, serverIP + ":" + serverPort + "/egs-router/", jsonReqMainPacket);
     }
     public void OnMemberDeleteButtonClicked()
     {
@@ -346,7 +373,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqMemberLogIn;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send(enum_HttpType, serverIP + ":" + serverPort + "/egs-router/", jsonReqMainPacket);
     }
     public void OnMemberLogoutButtonClicked()
     {
@@ -361,7 +388,7 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.payload = jsonReqMemberLogOut;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-        NetAPIModel.Instance.Send("http://" + serverIP + ":3000/egs-router/", jsonReqMainPacket);
+        NetAPIModel.Instance.Send(enum_HttpType, serverIP + ":" + serverPort + "/egs-router/", jsonReqMainPacket);
     }
     #endregion
 }

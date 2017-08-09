@@ -74,7 +74,7 @@ public class RESTFulTestView : MonoBehaviour
 
         string reqMainPacketJson = JsonUtility.ToJson(reqMainPacket);
 
-        NetAPIModel.Instance.Send("http://localhost:3000/HelloWorld", reqMainPacketJson);
+        NetAPIModel.Instance.Send(NetAPIModel.Enum_HttpType.http, "http://localhost:3000/HelloWorld", reqMainPacketJson);
     }
 
     public void OnServerVersionLoopTestButtonClick()
@@ -103,6 +103,6 @@ public class RESTFulTestView : MonoBehaviour
 
         string reqMainPacketJson = JsonUtility.ToJson(reqMainPacket);
 
-        NetAPIModel.Instance.Send("http://localhost:3000/ServerVersion", reqMainPacketJson);
+        NetAPIModel.Instance.Send(NetAPIModel.Enum_HttpType.http, "http://localhost:3000/ServerVersion", reqMainPacketJson);
     }
 }

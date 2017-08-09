@@ -3,6 +3,8 @@ using SCG_Unity_Client_API;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Security;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -84,7 +86,8 @@ public class EntryView : MonoBehaviour {
             //          "url: " + "http://localhost:3000/egs-router/" + "/n" +
             //          "json: " + mReqMainPacketJson);
 
-            NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+            
+            NetAPIModel.Instance.Send(NetAPIModel.Enum_HttpType.http, "http://localhost:3000/egs-router/", jsonReqMainPacket);
 
 
 
@@ -107,13 +110,18 @@ public class EntryView : MonoBehaviour {
             mReqMainPacket.payload = string.Empty;
             jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
-            NetAPIModel.Instance.Send("http://localhost:3000/egs-router/", jsonReqMainPacket);
+            NetAPIModel.Instance.Send(NetAPIModel.Enum_HttpType.http, "http://localhost:3000/egs-router/", jsonReqMainPacket);
 
             while (RegistTable.CommonDate.Flags.reqAESKeyComplete == false)
             {
                 yield return null;
             }
         }
+
+        ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback
+            (
+                (srvPoint, certificate, chain, errors) => true
+            );
 
         SceneManager.LoadScene("Login", LoadSceneMode.Additive);
 
