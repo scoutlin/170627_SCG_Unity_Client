@@ -30,7 +30,6 @@ public class LoginView : MonoBehaviour
     void Start()
     {
         RegistTable.Instance.mView.mLoginView = this;
-        NetAPIModel.Instance.ForceTrustCertificateForHttp2();
         
         //Server Init
         enum_HttpType = NetAPIModel.Enum_HttpType.https;
@@ -386,6 +385,23 @@ public class LoginView : MonoBehaviour
         mReqMainPacket.token = RegistTable.CommonDate.Variables.adminToken;
         mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
         mReqMainPacket.payload = jsonReqMemberLogOut;
+        string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
+
+        NetAPIModel.Instance.Send(enum_HttpType, serverIP + ":" + serverPort + "/egs-router/", jsonReqMainPacket);
+    }
+
+    public void OnMW_WriteGameHistoryClicked()
+    {
+        PacketStructModel.EGS_Router.ReqWriteGameHistory mReqWriteGameHistory = new PacketStructModel.EGS_Router.ReqWriteGameHistory();
+        mReqWriteGameHistory.GameSeqNo = (int)(DateTime.Now.Ticks / 100000000);
+        mReqWriteGameHistory.UserId = 53890359;
+        string jsonReqWriteGameHistory = JsonUtility.ToJson(mReqWriteGameHistory);
+
+        PacketStructModel.ReqMainPacket mReqMainPacket = new PacketStructModel.ReqMainPacket();
+        mReqMainPacket.cmd = PacketStructModel.EnumCmd.EGS_Router_WriteGameHistory.ToString();
+        mReqMainPacket.token = RegistTable.CommonDate.Variables.adminToken;
+        mReqMainPacket.timeStamp = DateTime.Now.Ticks.ToString();
+        mReqMainPacket.payload = jsonReqWriteGameHistory;
         string jsonReqMainPacket = JsonUtility.ToJson(mReqMainPacket);
 
         NetAPIModel.Instance.Send(enum_HttpType, serverIP + ":" + serverPort + "/egs-router/", jsonReqMainPacket);
